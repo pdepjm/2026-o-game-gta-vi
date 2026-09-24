@@ -9,3 +9,9 @@ object camion{
     method recibirEntregaDe(ladron){}
 
 }
+
+class Pared {
+  var property position = game.origin()
+  method image() = "pared.jpg"
+  method sePuedeAtravesar() = false
+} 

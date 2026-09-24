@@ -8,6 +8,11 @@ program juego {
 	game.title("Untitled Game")
 	game.height(20)
 	game.width(20)
+	game.cellSize(50)
+
+	// Prueba de generacion dinamica de paredes
+	const paredesDerecha = (0..19).map( {i => new Pared(position = game.at(19, i))} )
+	paredesDerecha.forEach({ pared => game.addVisual(pared) })
 
 	game.addVisual(ladron)
 	game.addVisual(policia)
@@ -24,6 +29,20 @@ program juego {
 	keyboard.down().onPressDo({ policia.moverseAbajo() })		
 	keyboard.left().onPressDo({ policia.moverseIzquierda() })
 	keyboard.right().onPressDo({ policia.moverseDerecha() }) 
+
+	//Colision con paredes
+	game.onCollideDo(ladron, { objetoMapa  =>
+		if (!objetoMapa.sePuedeAtravesar()) {
+			ladron.position(ladron.posicionAnterior())
+		}
+	})
+
+	game.onCollideDo(policia, { objetoMapa  =>
+		if (!objetoMapa.sePuedeAtravesar()) {
+			policia.position(policia.posicionAnterior())
+		}
+	})
+
 
 	game.start()
 }

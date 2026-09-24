@@ -1,5 +1,5 @@
 ### [Untitled]
 
-* Mazza Valentino
-* Integrante 2
-* Etc...
+- Mazza Valentino
+- Bernabe Kevin
+- Etc...
