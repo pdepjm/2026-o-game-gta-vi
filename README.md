@@ -1,5 +1,5 @@
-### [Nombre del juego]
+### [Untitled]
 
-* Integrante 1
+* Mazza Valentino
 * Integrante 2
 * Etc...

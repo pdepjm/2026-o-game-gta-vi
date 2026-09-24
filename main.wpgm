@@ -1,0 +1,29 @@
+import wollok.game.*
+import personajes.*
+import armamento.*
+import escenario.*
+import dinero.*
+
+program juego {
+	game.title("Untitled Game")
+	game.height(20)
+	game.width(20)
+
+	game.addVisual(ladron)
+	game.addVisual(policia)
+	game.addVisual(camion)
+
+	keyboard.w().onPressDo({ ladron.moverseArriba() })
+	keyboard.s().onPressDo({ ladron.moverseAbajo() })
+	keyboard.a().onPressDo({ ladron.moverseIzquierda() })
+	keyboard.d().onPressDo({ ladron.moverseDerecha() })
+
+	//up down left right son las flechas del teclado
+
+	keyboard.up().onPressDo({ policia.moverseArriba() })
+	keyboard.down().onPressDo({ policia.moverseAbajo() })		
+	keyboard.left().onPressDo({ policia.moverseIzquierda() })
+	keyboard.right().onPressDo({ policia.moverseDerecha() }) 
+
+	game.start()
+}
