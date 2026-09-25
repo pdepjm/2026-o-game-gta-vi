@@ -14,8 +14,6 @@ program juego {
 	const paredesDerecha = (0..19).map( {i => new Pared(position = game.at(19, i))} )
 	paredesDerecha.forEach({ pared => game.addVisual(pared) })
 
-	game.addVisual(ladron)
-	game.addVisual(policia)
 	game.addVisual(camion)
 
 	keyboard.w().onPressDo({ ladron.moverseArriba() })
@@ -30,16 +28,32 @@ program juego {
 	keyboard.left().onPressDo({ policia.moverseIzquierda() })
 	keyboard.right().onPressDo({ policia.moverseDerecha() }) 
 
+	//dinero de prueba
+	const agregarDinero = { dinero =>
+		game.addVisual(dinero)
+		game.onCollideDo(dinero, { personaje => personaje.chocarConDinero(dinero) })
+	}
+	agregarDinero.apply(new Moneda(position = game.at(5, 5)))
+	agregarDinero.apply(new Moneda(position = game.at(7, 5)))
+	agregarDinero.apply(new BolsaDeDinero(position = game.at(9, 5)))
+	agregarDinero.apply(new Diamante(position = game.at(11, 5)))
+
+	//policia y ladron se agrega despues del dinero para al pasar arriba del dinero aparezca el policia o ladron arriba del dinero y no al reves
+	game.addVisual(policia)
+	game.addVisual(ladron)
+
 	//Colision con paredes
 	game.onCollideDo(ladron, { objetoMapa  =>
-		if (!objetoMapa.sePuedeAtravesar()) {
-			ladron.position(ladron.posicionAnterior())
+		if (!objetoMapa.sePuedeAtravesarLadron()) {
+			ladron.retroceder()
 		}
 	})
 
+	game.onCollideDo(camion, { personaje => personaje.chocarConCamion(camion) })
+
 	game.onCollideDo(policia, { objetoMapa  =>
-		if (!objetoMapa.sePuedeAtravesar()) {
-			policia.position(policia.posicionAnterior())
+		if (!objetoMapa.sePuedeAtravesarPolicia()) {
+			policia.retroceder()
 		}
 	})
 

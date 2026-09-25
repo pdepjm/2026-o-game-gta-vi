@@ -1,88 +1,97 @@
 import wollok.game.*
 
-/* Posible uso de clase Personaje
-class Personaje {
-  var property position = game.origin()
-
-  method moverseArriba()    { position = position.up(1) }
-  method moverseAbajo()     { position = position.down(1) }
-  method moverseIzquierda() { position = position.left(1) }
-  method moverseDerecha()   { position = position.right(1) }
-  
-}
-
-*/
-
 object ladron{
-    var property position = game.origin()
+    var property position = game.at(0, 1)
     //var vidas = 3
-    //var velocidad = 5
+    const velocidadBase = 1
+    var velocidad = velocidadBase
     var posicionAnterior = position
+    var objetoQueCarga = null
+
     method posicionAnterior() = posicionAnterior
 
-    method image() = "ladron.png"
+    method image() = "ladron2.png"
 
-    method moverseArriba()    { 
-        posicionAnterior = position 
-        position = position.up(1) 
+    method moverseArriba()    { self.moverA(position.up(1)) }
+    method moverseAbajo()     { self.moverA(position.down(1)) }
+    method moverseIzquierda() { self.moverA(position.left(1)) }
+    method moverseDerecha()   { self.moverA(position.right(1)) }
+
+    //el ladron y la policia no se pueden atravesar si la celda destino esta ocupada ninguno se mueve
+    method moverA(destino){
+        if (destino != policia.position()) {
+            posicionAnterior = position
+            position = destino
+        }
     }
 
-    method moverseAbajo()     { 
-        posicionAnterior = position
-        position = position.down(1) 
-    }
-    method moverseIzquierda() { 
-        posicionAnterior = position
-        position = position.left(1) 
-    }
-    method moverseDerecha()   { 
-        posicionAnterior = position
-        position = position.right(1) 
+    method retroceder(){ position = posicionAnterior }
+
+    method sePuedeAtravesarPolicia() = true
+
+    method chocarConDinero(dinero){ dinero.serRecogidoPor(self) }
+
+    method chocarConCamion(camion){ camion.chocarConLadron(self) }
+
+    //con las manos ocupadas el ladron pasa por encima del dinero sin agarrarlo
+    method cargar(dinero){
+        if(self.tieneManosLibres()){
+            objetoQueCarga = dinero
+            dinero.alSerCargadoPor(self)
+            game.removeVisual(dinero)
+        }
     }
 
-    method cargar(dinero){}
+    method tieneManosLibres() = objetoQueCarga == null
 
-    method tieneManosLibres(){}
+    method valorCarga() = if (self.tieneManosLibres()) 0 else objetoQueCarga.valor()
 
-    method entregarCarga(){}
+    //al entregar se pierde el boost o penalizacion que daba el dinero cargado
+    method entregarCarga(){
+        objetoQueCarga = null
+        velocidad = velocidadBase
+    }
 
     method recibirDisparo(){}
 
     method atacar(){}
 
-    method modificarVelocidad(){}
+    method modificarVelocidad(modificador){ velocidad += modificador }
+
+    method velocidad() = velocidad
 
 }
 
 object policia{
-    var property position = game.origin()
-    
-    // Almacenamos pos anterior para manejar colisiones con paredes
+    var property position = game.at(18, 10)
     var posicionAnterior = position
-    method posicionAnterior() = posicionAnterior
-
     //var arma
     //var direccionDondeMira
     var aturdido = false
 
-    method image() = "policia2.jpg" //Imagen de 50px = tamaño de las celdas
+    method posicionAnterior() = posicionAnterior
 
-    method moverseArriba()    { 
-        posicionAnterior = position 
-        position = position.up(1) 
-    }
+    method retroceder(){ position = posicionAnterior }
 
-    method moverseAbajo()     { 
-        posicionAnterior = position
-        position = position.down(1) 
-    }
-    method moverseIzquierda() { 
-        posicionAnterior = position
-        position = position.left(1) 
-    }
-    method moverseDerecha()   { 
-        posicionAnterior = position
-        position = position.right(1) 
+    method sePuedeAtravesarLadron() = true
+
+    method chocarConDinero(dinero){}
+
+    method chocarConCamion(camion){}
+
+    method image() = "policia2.jpg" 
+
+    method moverseArriba()    { self.moverA(position.up(1)) }
+    method moverseAbajo()     { self.moverA(position.down(1)) }
+    method moverseIzquierda() { self.moverA(position.left(1)) }
+    method moverseDerecha()   { self.moverA(position.right(1)) }
+
+    //el ladron y la policia no se pueden atravesar si la celda destino esta ocupada ninguno se mueve
+    method moverA(destino){
+        if (destino != ladron.position()) {
+            posicionAnterior = position
+            position = destino
+        }
     }
 
     method disparar(){}
