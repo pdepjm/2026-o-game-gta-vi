@@ -52,6 +52,8 @@ object ladron{
         velocidad = velocidadBase
     }
 
+    method tomarArma(arma){}
+
     method recibirDisparo(){}
 
     method atacar(){}
@@ -65,7 +67,7 @@ object ladron{
 object policia{
     var property position = game.at(18, 10)
     var posicionAnterior = position
-    //var arma
+    var armaActual = null
     //var direccionDondeMira
     var aturdido = false
 
@@ -92,6 +94,11 @@ object policia{
             posicionAnterior = position
             position = destino
         }
+    }
+
+    method tomarArma(arma){
+        armaActual = arma
+        game.removeVisual(arma)
     }
 
     method disparar(){}
