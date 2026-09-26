@@ -49,6 +49,11 @@ program juego {
 	game.addVisual(policia)
 	game.addVisual(ladron)
 
+	// Puntaje y vidas mostrados en la interfaz
+	game.addVisual(puntaje)
+	game.addVisual(vidas)
+
+
 	//Colision con paredes
 	game.onCollideDo(ladron, { objetoMapa  =>
 		if (!objetoMapa.sePuedeAtravesarLadron()) {
