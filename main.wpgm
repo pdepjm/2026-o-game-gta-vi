@@ -16,17 +16,18 @@ program juego {
 
 	game.addVisual(camion)
 
-	keyboard.w().onPressDo({ ladron.moverseArriba() })
-	keyboard.s().onPressDo({ ladron.moverseAbajo() })
-	keyboard.a().onPressDo({ ladron.moverseIzquierda() })
-	keyboard.d().onPressDo({ ladron.moverseDerecha() })
+	// el intervalo es fijo y chico; la velocidad real del ladron la controla ladron.moverA
+	keyboard.w().whilePressedDo({ladron.moverseArriba()}, 50)
+	keyboard.s().whilePressedDo({ladron.moverseAbajo()}, 50)
+	keyboard.a().whilePressedDo({ladron.moverseIzquierda()}, 50)
+	keyboard.d().whilePressedDo({ladron.moverseDerecha()}, 50)
 
 	//up down left right son las flechas del teclado
 
-	keyboard.up().onPressDo({ policia.moverseArriba() })
-	keyboard.down().onPressDo({ policia.moverseAbajo() })		
-	keyboard.left().onPressDo({ policia.moverseIzquierda() })
-	keyboard.right().onPressDo({ policia.moverseDerecha() }) 
+	keyboard.up().whilePressedDo({policia.moverseArriba()}, 300)
+	keyboard.down().whilePressedDo({policia.moverseAbajo()}, 300)
+	keyboard.left().whilePressedDo({policia.moverseIzquierda()}, 300)
+	keyboard.right().whilePressedDo({policia.moverseDerecha()}, 300)
 
 	//dinero de prueba
 	const agregarDinero = { dinero =>

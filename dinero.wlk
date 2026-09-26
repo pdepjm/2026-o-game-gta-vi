@@ -27,7 +27,7 @@ class BolsaDeDinero{
     }
 
     method alSerCargadoPor(ladron){
-        ladron.modificarVelocidad(1)
+        ladron.modificarVelocidad(-100)
     }
 
     method sePuedeAtravesarLadron() = true
@@ -45,7 +45,7 @@ class Diamante{
     }
 
     method alSerCargadoPor(ladron){
-        ladron.modificarVelocidad(-1)
+        ladron.modificarVelocidad(100)
     }
 
     method sePuedeAtravesarLadron() = true

@@ -3,8 +3,9 @@ import wollok.game.*
 object ladron{
     var property position = game.at(0, 1)
     //var vidas = 3
-    const velocidadBase = 1
+    const velocidadBase = 300
     var velocidad = velocidadBase
+    var ultimoMovimiento = 0
     var posicionAnterior = position
     var objetoQueCarga = null
 
@@ -19,11 +20,15 @@ object ladron{
 
     //el ladron y la policia no se pueden atravesar si la celda destino esta ocupada ninguno se mueve
     method moverA(destino){
-        if (destino != policia.position()) {
+        if (self.pasoElTiempoDeMovimiento() and destino != policia.position()) {
+            ultimoMovimiento = game.currentTime()
             posicionAnterior = position
             position = destino
         }
     }
+
+    //el timer de la tecla es fijo, asi que la velocidad actual se aplica aca: se mueve solo si pasaron "velocidad" ms desde el ultimo paso
+    method pasoElTiempoDeMovimiento() = game.currentTime() - ultimoMovimiento >= velocidad
 
     method retroceder(){ position = posicionAnterior }
 
@@ -58,7 +63,7 @@ object ladron{
 
     method atacar(){}
 
-    method modificarVelocidad(modificador){ velocidad += modificador }
+    method modificarVelocidad(modificador){ velocidad += modificador } //restar va mas rapido, sumar va mas lento
 
     method velocidad() = velocidad
 
