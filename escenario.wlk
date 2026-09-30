@@ -2,16 +2,12 @@ import wollok.game.*
 
 object camion{
     const property position = game.origin()
-    // var dineroAcumulado = 0
-    // method dineroAcumulado() = dineroAcumulado
 
     method image() = "camion2.png"
 
     method recibirEntregaDe(ladron){
-        // dineroAcumulado += ladron.valorCarga()
         puntaje.sumar(ladron.valorCarga())
         ladron.entregarCarga()
-        
     }
 
     //el camion recibe la carga y hace que el ladron no lo pueda atravesar
@@ -23,32 +19,39 @@ object camion{
     method sePuedeAtravesarLadron() = true
     method sePuedeAtravesarPolicia() = false
 
+    method recibirImpactoDe(proyectil){}
+
 }
 class Pared {
-  var property position = game.origin()
+  const property position = game.origin()
   method image() = "pared.jpg"
   method sePuedeAtravesarLadron() = false
   method sePuedeAtravesarPolicia() = false
-} 
+
+  method recibirImpactoDe(proyectil){ proyectil.destruir() }
+}
 
 object puntaje {
-    var property  position = game.at(1, 19)
+    const property position = game.at(1, 19)
     var puntos = 0
-    
+
     method text() = "Puntos: " + puntos
 
     method sumar(cantidad) {
         puntos += cantidad
     }
-    
+
     method puntos() = puntos
-    
-    method sePuedeAtravesarPolicia() = true
+
+    method recibirImpactoDe(proyectil){}
+
+    //es solo texto de HUD, no bloquea a nadie
     method sePuedeAtravesarLadron() = true
+    method sePuedeAtravesarPolicia() = true
 }
 
 object vidas {
-    var property position = game.at(1,18)
+    const property position = game.at(1,18)
     var cantidad = 3
 
     method text() = "Vidas: " + cantidad
@@ -58,6 +61,12 @@ object vidas {
     }
 
     method cantidad() = cantidad
-    
+
     method seAgotaron() = cantidad <= 0
+
+    method recibirImpactoDe(proyectil){}
+
+    //es solo texto de HUD, no bloquea a nadie
+    method sePuedeAtravesarLadron() = true
+    method sePuedeAtravesarPolicia() = true
 }

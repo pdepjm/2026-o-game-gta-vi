@@ -1,15 +1,13 @@
 import wollok.game.*
+import escenario.*
 
 object ladron{
     var property position = game.at(0, 1)
-    //var vidas = 3
     const velocidadBase = 300
     var velocidad = velocidadBase
     var ultimoMovimiento = 0
     var posicionAnterior = position
     var objetoQueCarga = null
-
-    method posicionAnterior() = posicionAnterior
 
     method image() = "ladron2.png"
 
@@ -18,25 +16,35 @@ object ladron{
     method moverseIzquierda() { self.moverA(position.left(1)) }
     method moverseDerecha()   { self.moverA(position.right(1)) }
 
-    //el ladron y la policia no se pueden atravesar si la celda destino esta ocupada ninguno se mueve
+    //una celda ocupada por algo infranqueable no se pisa, lo resuelve celdaLibre
     method moverA(destino){
-        if (self.pasoElTiempoDeMovimiento() and destino != policia.position()) {
+        if (self.pasoElTiempoDeMovimiento() and self.celdaLibre(destino)) {
             ultimoMovimiento = game.currentTime()
             posicionAnterior = position
             position = destino
         }
     }
 
-    //el timer de la tecla es fijo, asi que la velocidad actual se aplica aca: se mueve solo si pasaron "velocidad" ms desde el ultimo paso
+    //se consulta antes de moverse , asi ninguna tecla mantenida presionada
+    //logra meter al ladron dentro de una pared mientras el chequeo de colision reactivo todavia no corrio
+    //getObjectsIn nos dice si hay un objeto que no se puede atravesar en la celda destino, si hay alguno no se mueve
+    method celdaLibre(destino) = game.getObjectsIn(destino).all({ objeto => objeto.sePuedeAtravesarLadron() })
+
+    //currentTime nos dice el tiempo trancurrido y asi vamos a poder limitar la velocidad del ladron,no se puede mover mas rapido de lo que le permite su velocidad
     method pasoElTiempoDeMovimiento() = game.currentTime() - ultimoMovimiento >= velocidad
 
     method retroceder(){ position = posicionAnterior }
 
-    method sePuedeAtravesarPolicia() = true
+    //el ladron y la policia no se pueden atravesar
+    method sePuedeAtravesarPolicia() = false
 
     method chocarConDinero(dinero){ dinero.serRecogidoPor(self) }
 
     method chocarConCamion(camion){ camion.chocarConLadron(self) }
+
+    method chocarConMunicion(municion){}
+
+    method chocarConArma(arma){}
 
     //con las manos ocupadas el ladron pasa por encima del dinero sin agarrarlo
     method cargar(dinero){
@@ -57,15 +65,19 @@ object ladron{
         velocidad = velocidadBase
     }
 
-    method tomarArma(arma){}
+    method recibirImpactoDe(proyectil){
+        self.recibirDisparo()
+        proyectil.destruir()
+    }
 
-    method recibirDisparo(){}
-
-    method atacar(){}
+    method recibirDisparo(){
+        vidas.perderUnaVida()
+        if (vidas.seAgotaron()) {
+            game.removeVisual(self)
+        }
+    }
 
     method modificarVelocidad(modificador){ velocidad += modificador } //restar va mas rapido, sumar va mas lento
-
-    method velocidad() = velocidad
 
 }
 
@@ -73,43 +85,65 @@ object policia{
     var property position = game.at(18, 10)
     var posicionAnterior = position
     var armaActual = null
-    //var direccionDondeMira
-    var aturdido = false
-
-    method posicionAnterior() = posicionAnterior
+    var direccion = "abajo"
 
     method retroceder(){ position = posicionAnterior }
 
-    method sePuedeAtravesarLadron() = true
+    //el ladron y la policia no se pueden atravesar
+    method sePuedeAtravesarLadron() = false
 
     method chocarConDinero(dinero){}
 
     method chocarConCamion(camion){}
 
-    method image() = "policia2.jpg" 
+    //solo la recoge si tiene un arma equipada
+    method chocarConMunicion(municion){
+        if (self.tieneArmaEquipada()) { municion.serRecogidaPor(self) }
+    }
 
-    method moverseArriba()    { self.moverA(position.up(1)) }
-    method moverseAbajo()     { self.moverA(position.down(1)) }
-    method moverseIzquierda() { self.moverA(position.left(1)) }
-    method moverseDerecha()   { self.moverA(position.right(1)) }
+    method tieneArmaEquipada() = armaActual != null
 
-    //el ladron y la policia no se pueden atravesar si la celda destino esta ocupada ninguno se mueve
+    //el disparo propio no lastima a la policia
+    method recibirImpactoDe(proyectil){}
+
+    method image() = "policia2.jpg"
+
+    //necesitamos saber la direccion para disparar hacia donde mira el policia
+    method moverseArriba()    { direccion = "arriba";    self.moverA(position.up(1)) }
+    method moverseAbajo()     { direccion = "abajo";     self.moverA(position.down(1)) }
+    method moverseIzquierda() { direccion = "izquierda"; self.moverA(position.left(1)) }
+    method moverseDerecha()   { direccion = "derecha";   self.moverA(position.right(1)) }
+
+
     method moverA(destino){
-        if (destino != ladron.position()) {
+        if (self.celdaLibre(destino)) {
             posicionAnterior = position
             position = destino
         }
     }
+
+    method celdaLibre(destino) = game.getObjectsIn(destino).all({ objeto => objeto.sePuedeAtravesarPolicia() })
+
+    method chocarConArma(arma){ self.tomarArma(arma) }
 
     method tomarArma(arma){
         armaActual = arma
         game.removeVisual(arma)
     }
 
-    method disparar(){}
+    //delegamos el disparo al arma actual, en la direccion hacia la que esta mirando
+    method disparar(){
+        if (self.tieneArmaEquipada()) {
+            armaActual.disparar(position, direccion)
+        }
+    }
 
-    method aturdir(){ aturdido = true}
+    //delega en Pistola.recargar(), que ya sabe a cuanto topear la municion
+    method recargar(){
+        if (self.tieneArmaEquipada()) {
+            armaActual.recargar()
+        }
+    }
 
-    method puedeActuar() = !aturdido // se consulta cuando se quiere disparar o moverse
 }
 

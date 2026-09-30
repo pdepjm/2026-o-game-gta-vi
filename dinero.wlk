@@ -2,7 +2,7 @@ import wollok.game.*
 
 class Moneda{
     const property valor = 10
-    var property position = game.origin()
+    const property position = game.origin()
 
     method image() = "moneda2.jpg"
 
@@ -14,11 +14,13 @@ class Moneda{
 
     method sePuedeAtravesarLadron() = true
     method sePuedeAtravesarPolicia() = true
+
+    method recibirImpactoDe(proyectil){}
 }
 
 class BolsaDeDinero{
     const property valor = 100
-    var property position = game.origin()
+    const property position = game.origin()
 
     method image() = "bolsaDeDinero2.png"
 
@@ -32,11 +34,13 @@ class BolsaDeDinero{
 
     method sePuedeAtravesarLadron() = true
     method sePuedeAtravesarPolicia() = true
+
+    method recibirImpactoDe(proyectil){}
 }
 
 class Diamante{
     const property valor = 500
-    var property position = game.origin()
+    const property position = game.origin()
 
     method image() = "diamante2.png"
 
@@ -50,4 +54,6 @@ class Diamante{
 
     method sePuedeAtravesarLadron() = true
     method sePuedeAtravesarPolicia() = true
+
+    method recibirImpactoDe(proyectil){}
 }

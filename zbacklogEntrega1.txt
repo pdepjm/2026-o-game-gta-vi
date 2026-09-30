@@ -1,4 +1,4 @@
-[] Ladron
+[X] Ladron
 
 Atributos: posición, dirección hacia la que mira, vidas (3), objeto de dinero que está cargando (o nada), velocidad actual.
 Mensajes:
@@ -7,19 +7,19 @@ Mensajes:
 [X]  cargar(dinero) — guarda la referencia al dinero recogido (deja las manos ocupadas).
 [X]  tieneManosLibres() — consulta si puede recoger algo.
 [X]  entregarCarga() — devuelve lo que está cargando y vacía las manos (lo usa el camión al recibir la entrega).
-[]  recibirDisparo() — resta una vida.
-[]  atacar() — calcula la celda inmediatamente adelante según hacia dónde mira, y si hay un policía ahí, le manda aturdir().
+[X]  recibirDisparo() — resta una vida.
+[Descartado]  atacar() — calcula la celda inmediatamente adelante según hacia dónde mira, y si hay un policía ahí, le manda aturdir().
 [X]  modificarVelocidad(nuevaVelocidad) — la usan los objetos de dinero al aplicar su efecto.
 
-[]  Policia
+[X]  Policia
 
 Atributos: posición, dirección hacia la que mira, arma, si está aturdido.
 Mensajes:
 
 [X]  moverseArriba(), moverseAbajo(), moverseIzquierda(), moverseDerecha() — igual que el ladrón (repetido por ahora).
-[]  disparar() — si no está aturdido, le delega a su arma disparar(direccionHaciaDondeMiro).
-[]  aturdir() — se marca como aturdido (probablemente con un timer del framework que lo revierte pasado un tiempo).
-[]  puedeActuar() — consulta si está aturdido (la usan moverseX() y disparar() para no hacer nada si está aturdido).
+[X]  disparar() — si no está aturdido, le delega a su arma disparar(direccionHaciaDondeMiro).
+[Descartado]  aturdir() — se marca como aturdido (probablemente con un timer del framework que lo revierte pasado un tiempo).
+[X]  puedeActuar() — consulta si está aturdido (la usan moverseX() y disparar() para no hacer nada si está aturdido).
 
 [X] Obstaculo
 
@@ -46,27 +46,28 @@ Mensajes:
 
 [X] recibirEntregaDe(ladron) — le pregunta al ladrón entregarCarga(), y con lo que recibe suma su valor al puntaje.
 
-[] Arma
+[X] Arma
 
 Atributos: munición actual, si está en cooldown.
 Mensajes:
 
-[] disparar(direccion) — si tiene munición y no está en cooldown, crea un Proyectil en esa dirección, descuenta munición y activa el cooldown.
-[] recargar(cantidad) — suma munición.
-[] puedeDisparar() — consulta munición y cooldown.
+[X] disparar(direccion) — si tiene munición y no está en cooldown, crea un Proyectil en esa dirección, descuenta munición y activa el cooldown.
+[X] recargar(cantidad) — suma munición.
+[X] puedeDisparar() — consulta munición y cooldown.
 
-[] Proyectil
+[X] Proyectil
 
 Atributos: posición, dirección.
 Mensajes:
 
-[] moverse() — se llama en cada tick del timer del framework, avanza una celda en su dirección.
-[] impactar(objeto) — se dispara desde la colisión; si el objeto es un Ladron, le manda recibirDisparo(); si es un Obstaculo, simplemente desaparece.
-[] Municion (ítem en el mapa)
+[X] moverse() — se llama en cada tick del timer del framework, avanza una celda en su dirección.
+[X] impactar(objeto) — se dispara desde la colisión; si el objeto es un Ladron, le manda recibirDisparo(); si es un Obstaculo, simplemente desaparece.
+
+[X] Municion (ítem en el mapa)
 
 Atributos: posición, cantidad que recarga.
 Mensajes:
 
-[] serRecogidaPor(policia) — le manda recargar(cantidad) a su arma y se elimina del tablero.
+[X] serRecogidaPor(policia) — le manda recargar(cantidad) a su arma y se elimina del tablero.
 
 [] TESTS ENTREGA1

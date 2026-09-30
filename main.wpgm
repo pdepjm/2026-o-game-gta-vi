@@ -10,13 +10,19 @@ program juego {
 	game.width(20)
 	game.cellSize(50)
 
-	// Prueba de generacion dinamica de paredes
-	const paredesDerecha = (0..19).map( {i => new Pared(position = game.at(19, i))} )
-	paredesDerecha.forEach({ pared => game.addVisual(pared) })
+	//paredes por fuera del tablero (una celda mas alla de cada borde)
+	const filaDeArriba = (-1..game.width()).map({i => new Pared(position = game.at(i, game.height()))})
+	const filaDeAbajo = (-1..game.width()).map({i => new Pared(position = game.at(i, -1))})
+	const columnaIzquierda = (0..(game.height() - 1)).map({j => new Pared(position = game.at(-1, j))})
+	const columnaDerecha = (0..(game.height() - 1)).map({j => new Pared(position = game.at(game.width(), j))})
+	filaDeArriba.forEach({ pared => game.addVisual(pared) })
+	filaDeAbajo.forEach({ pared => game.addVisual(pared) })
+	columnaIzquierda.forEach({ pared => game.addVisual(pared) })
+	columnaDerecha.forEach({ pared => game.addVisual(pared) })
 
 	game.addVisual(camion)
 
-	// el intervalo es fijo y chico; la velocidad real del ladron la controla ladron.moverA
+	//el intervalo es fijo y chico; la velocidad real del ladron la controla ladron.moverA
 	keyboard.w().whilePressedDo({ladron.moverseArriba()}, 50)
 	keyboard.s().whilePressedDo({ladron.moverseAbajo()}, 50)
 	keyboard.a().whilePressedDo({ladron.moverseIzquierda()}, 50)
@@ -29,6 +35,9 @@ program juego {
 	keyboard.left().whilePressedDo({policia.moverseIzquierda()}, 300)
 	keyboard.right().whilePressedDo({policia.moverseDerecha()}, 300)
 
+	//tecla P para disparar(tecla de prueba)
+	keyboard.p().onPressDo({ policia.disparar() })
+
 	//dinero de prueba
 	const agregarDinero = { dinero =>
 		game.addVisual(dinero)
@@ -39,12 +48,16 @@ program juego {
 	agregarDinero.apply(new BolsaDeDinero(position = game.at(9, 5)))
 	agregarDinero.apply(new Diamante(position = game.at(11, 5)))
 
-	// Armas de prueba 
-	const agregarArma = { arma => 
+	//arma de prueba
+	const agregarArma = { arma =>
 		game.addVisual(arma)
-		game.onCollideDo(arma, { policia => policia.tomarArma(arma) })
+		game.onCollideDo(arma, { personaje => personaje.chocarConArma(arma) })
 	}
 	agregarArma.apply(new Pistola(position = game.at(5,6)))
+
+	//municion de prueba
+	game.addVisual(municion)
+	game.onCollideDo(municion, { personaje => personaje.chocarConMunicion(municion) })
 
 	//policia y ladron se agrega despues del dinero para al pasar arriba del dinero aparezca el policia o ladron arriba del dinero y no al reves
 	game.addVisual(policia)
@@ -55,21 +68,7 @@ program juego {
 	game.addVisual(vidas)
 
 
-	//Colision con paredes
-	game.onCollideDo(ladron, { objetoMapa  =>
-		if (!objetoMapa.sePuedeAtravesarLadron()) {
-			ladron.retroceder()
-		}
-	})
-
 	game.onCollideDo(camion, { personaje => personaje.chocarConCamion(camion) })
-
-	game.onCollideDo(policia, { objetoMapa  =>
-		if (!objetoMapa.sePuedeAtravesarPolicia()) {
-			policia.retroceder()
-		}
-	})
-
 
 	game.start()
 }
