@@ -1,5 +1,6 @@
-### [Nombre del juego]
+### [Untitled]
 
-* Integrante 1
-* Integrante 2
-* Etc...
+- Mazza Valentino
+- Bernabe Kevin
+- Ghioldi Crespo Francisco
+- etc...
