@@ -1,13 +1,13 @@
 1. Correcciones
 
-[] Crear los objetos arriba, abajo, izquierda y derecha, con un mensaje común (posición siguiente a una dada), que reemplacen los else if.
+[X] Crear los objetos arriba, abajo, izquierda y derecha, con un mensaje común (posición siguiente a una dada), que reemplacen los else if.
 
-[] Usar las direcciones en el movimiento de ladrón y policía y en el proyectil
+[X] Usar las direcciones en el movimiento de ladrón y policía y en el proyectil
 
 
 2. Herencia y override
 
-[] Separar archivos: personaje.wlk, ladron.wlk y policia.wlk.
+[X] Separar archivos: personaje.wlk, ladron.wlk y policia.wlk.
 
 [] Clase abstracta Personaje con lo que comparten (posición, dirección, movimiento, colisión). ladron y policia siguen siendo objetos únicos que la heredan, con override de lo que difiera.
 
@@ -35,9 +35,9 @@
 
 4. Investigación, tests y diagrama
 
-[] whilePressedDo: investigar si se puede hacer de otra manera el movimiento para que no quede tan rebuscado. Si no, queda como está, como se indicó.
+[X] whilePressedDo: se mantiene el uso actual porque permite repetir el movimiento mientras se sostiene la tecla; reemplazarlo por onPressDo perdería esa repetición.
 
-[] Adaptar los tests de la Entrega 1 al refactor de direcciones y a Personaje.
+[X] Adaptar los tests de la Entrega 1 al refactor de direcciones y a Personaje.
 
 [] Tests nuevos: direcciones, armas y daño, spawn y regeneración de dinero, game over.
 

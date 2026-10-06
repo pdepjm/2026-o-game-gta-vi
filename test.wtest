@@ -1,3 +1,182 @@
 import wollok.game.*
 
-import personajes.*
+import personaje.*
+import ladron.*
+import policia.*
+import armamento.*
+import direcciones.*
+import dinero.*
+import escenario.*
+
+describe "Entrega 1" {
+
+  var pared
+  var moneda
+  var bolsa
+  var arma
+  var proyectil
+
+  method initialize() {
+    ladron.position(game.at(0, 1))
+    policia.position(game.at(18, 10))
+    ladron.direccion(abajo)
+    policia.direccion(abajo)
+  }
+
+  test "arriba calcula la celda siguiente" {
+    const origen = game.at(3, 4)
+
+    const destino = arriba.siguientePosicion(origen)
+
+    assert.equals(game.at(3, 5), destino)
+  }
+
+  test "abajo calcula la celda siguiente" {
+    const origen = game.at(3, 4)
+
+    const destino = abajo.siguientePosicion(origen)
+
+    assert.equals(game.at(3, 3), destino)
+  }
+
+  test "izquierda calcula la celda siguiente" {
+    const origen = game.at(3, 4)
+
+    const destino = izquierda.siguientePosicion(origen)
+
+    assert.equals(game.at(2, 4), destino)
+  }
+
+  test "derecha calcula la celda siguiente" {
+    const origen = game.at(3, 4)
+
+    const destino = derecha.siguientePosicion(origen)
+
+    assert.equals(game.at(4, 4), destino)
+  }
+
+  test "el policía se mueve hacia arriba usando la dirección correspondiente" {
+    policia.position(game.at(8, 8))
+
+    policia.moverseArriba()
+
+    assert.equals(game.at(8, 9), policia.position())
+    assert.equals(arriba, policia.direccion())
+  }
+
+  test "el policía se mueve hacia abajo usando la dirección correspondiente" {
+    policia.position(game.at(8, 8))
+
+    policia.moverseAbajo()
+
+    assert.equals(game.at(8, 7), policia.position())
+    assert.equals(abajo, policia.direccion())
+  }
+
+  test "el policía se mueve hacia la izquierda usando la dirección correspondiente" {
+    policia.position(game.at(8, 8))
+
+    policia.moverseIzquierda()
+
+    assert.equals(game.at(7, 8), policia.position())
+    assert.equals(izquierda, policia.direccion())
+  }
+
+  test "el policía se mueve hacia la derecha usando la dirección correspondiente" {
+    policia.position(game.at(8, 8))
+
+    policia.moverseDerecha()
+
+    assert.equals(game.at(9, 8), policia.position())
+    assert.equals(derecha, policia.direccion())
+  }
+
+  test "la celda destino del ladrón se valida antes de moverse" {
+    pared = new Pared(position = game.at(2, 4))
+    game.addVisual(pared)
+    ladron.position(game.at(2, 3))
+
+    const destinoBloqueado = game.at(2, 4)
+    const destinoLibre = game.at(2, 2)
+
+    assert.notThat(ladron.celdaLibre(destinoBloqueado))
+    assert.that(ladron.celdaLibre(destinoLibre))
+  }
+
+  test "el policía puede moverse y no pisa una pared" {
+    pared = new Pared(position = game.at(8, 8))
+    game.addVisual(pared)
+    policia.position(game.at(8, 7))
+
+    policia.moverseAbajo()
+
+    assert.equals(game.at(8, 6), policia.position())
+    assert.notThat(policia.celdaLibre(game.at(8, 8)))
+    assert.equals(abajo, policia.direccion())
+  }
+
+  test "el ladrón puede cargar una moneda" {
+    moneda = new Moneda(position = game.at(1, 8))
+    game.addVisual(moneda)
+    ladron.position(game.at(1, 8))
+
+    ladron.cargar(moneda)
+
+    assert.notThat(ladron.tieneManosLibres())
+    assert.equals(10, ladron.valorCarga())
+  }
+
+  test "el camión recibe la carga del ladrón" {
+    moneda = new Moneda(position = game.at(1, 8))
+    game.addVisual(moneda)
+    ladron.position(game.at(1, 8))
+    ladron.cargar(moneda)
+    const puntosAntes = puntaje.puntos()
+
+    camion.recibirEntregaDe(ladron)
+
+    assert.equals(puntosAntes + 10, puntaje.puntos())
+    assert.that(ladron.tieneManosLibres())
+  }
+
+  test "al cargar un billete queda ocupada la mano del ladrón" {
+    bolsa = new BolsaDeDinero(position = game.at(5, 9))
+    game.addVisual(bolsa)
+    ladron.position(game.at(5, 9))
+
+    ladron.cargar(bolsa)
+
+    assert.notThat(ladron.tieneManosLibres())
+    assert.equals(100, ladron.valorCarga())
+  }
+
+  test "el policía puede disparar con su arma actual" {
+    arma = new Pistola()
+    policia.position(game.at(10, 10))
+    policia.tomarArma(arma)
+
+    policia.disparar()
+
+    assert.equals(6, arma.balasEnCargador())
+  }
+
+  test "la munición recarga el arma del policía" {
+    arma = new Pistola()
+    arma.balasEnCargador(1)
+    policia.position(game.at(12, 12))
+    policia.tomarArma(arma)
+
+    municion.serRecogidaPor(policia)
+
+    assert.equals(7, arma.balasEnCargador())
+  }
+
+  test "el proyectil le quita una vida al ladrón al impactar" {
+    proyectil = new Proyectil(position = game.at(4, 4), direccion = arriba)
+    const vidasAntes = vidas.cantidad()
+
+    ladron.recibirImpactoDe(proyectil)
+
+    assert.equals(vidasAntes - 1, vidas.cantidad())
+  }
+}

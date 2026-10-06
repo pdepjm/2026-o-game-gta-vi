@@ -1,5 +1,7 @@
 import wollok.game.*
-import personajes.*
+import personaje.*
+import ladron.*
+import policia.*
 import armamento.*
 import escenario.*
 import dinero.*

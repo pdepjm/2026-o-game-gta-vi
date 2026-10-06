@@ -1,13 +1,5 @@
 import wollok.game.*
-
-//logica de direcciones compartida entre el policia y el proyectil para no repetir
-object direcciones { 
-  method siguientePosicion(position, direccion) =
-    if (direccion == "arriba") position.up(1)
-    else if (direccion == "abajo") position.down(1)
-    else if (direccion == "izquierda") position.left(1)
-    else position.right(1)
-}
+import direcciones.*
 
 class Proyectil{
   var property position
@@ -36,7 +28,7 @@ class Proyectil{
     }
   }
 
-  method siguientePosicion() = direcciones.siguientePosicion(position, direccion)
+  method siguientePosicion() = direccion.siguientePosicion(position)
 
   //cada objeto que puede ser tocado por un proyectil decide que le pasa en su propio recibirImpactoDe
   method impactar(objetoChocado){
@@ -98,7 +90,7 @@ class Pistola {
       cooldown = true
       balasEnCargador -= 1
       self.iniciarCooldown()
-      const celdaDeDisparo = direcciones.siguientePosicion(origen, direccion) //dispara una posicion adelante del policia
+      const celdaDeDisparo = direccion.siguientePosicion(origen) //dispara una posicion adelante del policia
       const proyectil = new Proyectil(position = celdaDeDisparo, direccion = direccion)
       game.addVisual(proyectil)
       proyectil.iniciarMovimiento()
@@ -121,4 +113,3 @@ class Pistola {
   method recibirImpactoDe(proyectil){}
 
 }
-
