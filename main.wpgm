@@ -2,9 +2,11 @@ import wollok.game.*
 import personaje.*
 import ladron.*
 import policia.*
-import armamento.*
+import municion.*
 import escenario.*
 import dinero.*
+import direcciones.*
+import armas.*
 
 program juego {
 	game.title("Untitled Game")
@@ -55,7 +57,8 @@ program juego {
 		game.addVisual(arma)
 		game.onCollideDo(arma, { personaje => personaje.chocarConArma(arma) })
 	}
-	agregarArma.apply(new Pistola(position = game.at(5,6)))
+	agregarArma.apply(new Pistola(position = game.at(16,11)))
+	agregarArma.apply(new Escopeta(position = game.at(16,10)))
 
 	//municion de prueba
 	game.addVisual(municion)

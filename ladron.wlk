@@ -3,12 +3,12 @@ import personaje.*
 import escenario.*
 
 object ladron inherits Personaje(position = game.at(0, 1)) {
-    const velocidadBase = 300
+    const velocidadBase = 265
     var velocidad = velocidadBase
     var ultimoMovimiento = 0
     var objetoQueCarga = null
 
-    method image() = "ladron2.png"
+    override method image() = "ladron2.png"
 
     override method celdaLibre(destino) = game.getObjectsIn(destino).all({ objeto => objeto.sePuedeAtravesarLadron() })
 
@@ -46,12 +46,12 @@ object ladron inherits Personaje(position = game.at(0, 1)) {
     }
 
     method recibirImpactoDe(proyectil) {
-        self.recibirDisparo()
+        self.recibirDisparo(proyectil.danioProyectil())
         proyectil.destruir()
     }
 
-    method recibirDisparo() {
-        vidas.perderUnaVida()
+    method recibirDisparo(danio) {
+        vidas.perderVida(danio)
         if (vidas.seAgotaron()) {
             game.removeVisual(self)
         }

@@ -9,15 +9,15 @@
 
 [X] Separar archivos: personaje.wlk, ladron.wlk y policia.wlk.
 
-[] Clase abstracta Personaje con lo que comparten (posición, dirección, movimiento, colisión). ladron y policia siguen siendo objetos únicos que la heredan, con override de lo que difiera.
+[X] Clase abstracta Personaje con lo que comparten (posición, dirección, movimiento, colisión). ladron y policia siguen siendo objetos únicos que la heredan, con override de lo que difiera.
 
-[] Clase abstracta Arma, con la pistola actual y la escopeta como subclases. La escopeta tiene más daño, disparo más lento y capacidad de 2 balas.
+[X] Clase abstracta Arma, con la pistola actual y la escopeta como subclases. La escopeta tiene más daño, disparo más lento y capacidad de 2 balas.
 
-[] El daño depende del arma: recibirDisparo() del ladrón recibe cuánto daño le hacen (el ladrón tiene 3 vidas).
+[X] El daño depende del arma: recibirDisparo() del ladrón recibe cuánto daño le hacen (el ladrón tiene 3 vidas).
 
-[] Armas que aparecen en el mapa. Al recoger una, el policía pierde la anterior con su munición.
+[X] Armas que aparecen en el mapa. Al recoger una, el policía pierde la anterior 
 
-[] Munición única que recarga el arma actual, puede cambiar pero asi es mas facil
+[X] Munición única que recarga el arma actual, puede cambiar pero asi es mas facil
 
 
 3. Mecánicas

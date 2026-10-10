@@ -3,10 +3,11 @@ import wollok.game.*
 import personaje.*
 import ladron.*
 import policia.*
-import armamento.*
+import municion.*
 import direcciones.*
 import dinero.*
 import escenario.*
+import armas.*
 
 describe "Entrega 1" {
 
@@ -172,11 +173,20 @@ describe "Entrega 1" {
   }
 
   test "el proyectil le quita una vida al ladrón al impactar" {
-    proyectil = new Proyectil(position = game.at(4, 4), direccion = arriba)
-    const vidasAntes = vidas.cantidad()
+    proyectil = new Proyectil(position = game.at(4, 4), direccion = arriba, danioProyectil = 1)
+    const vidasAntes = vidas.restantes()
 
     ladron.recibirImpactoDe(proyectil)
 
-    assert.equals(vidasAntes - 1, vidas.cantidad())
+    assert.equals(vidasAntes - 1, vidas.restantes())
+  }
+
+    test "el proyectil le quita dos vidas al ladrón al impactar" {
+    proyectil = new Proyectil(position = game.at(4, 4), direccion = arriba, danioProyectil = 2)
+    const vidasAntes = vidas.restantes()
+
+    ladron.recibirImpactoDe(proyectil)
+
+    assert.equals(vidasAntes - 2, vidas.restantes())
   }
 }

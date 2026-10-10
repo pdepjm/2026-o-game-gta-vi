@@ -4,7 +4,7 @@ import personaje.*
 object policia inherits Personaje(position = game.at(18, 10)) {
     var armaActual = null
 
-    method image() = "policia2.jpg"
+    override method image() = "policia2.jpg"
 
     override method celdaLibre(destino) = game.getObjectsIn(destino).all({ objeto => objeto.sePuedeAtravesarPolicia() })
 

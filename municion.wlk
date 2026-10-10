@@ -4,8 +4,9 @@ import direcciones.*
 class Proyectil{
   var property position
   const direccion
+  const property danioProyectil
   var activo = true              //activo parece redundante pero evita procesar el mismo impacto dos veces: si dos cosas coinciden en la celda del                   
-  const intervaloMovimiento = 80 //proyectil en el mismo instante, o si avanzar() ya estaba programado cuando esto se destruye
+  const intervaloMovimiento = 150 //proyectil en el mismo instante, o si avanzar() ya estaba programado cuando esto se destruye
 
   method image() = "proyectil.png"
 
@@ -70,46 +71,5 @@ object municion {
     policia.recargar()
     game.removeVisual(self)
   }
-
-}
-
-class Pistola {
-  const municionMaxima = 7
-  var property balasEnCargador = municionMaxima
-  const property position = game.at(14, 12)
-  var cooldown = false
-  const cooldownMs = 1500
-
-  method image() = "pistola.jpg"
-  method sePuedeAtravesarPolicia() = true
-  method sePuedeAtravesarLadron() = true
-
-  //el origen posicion actual del policia y direccion es donde mira
-  method disparar(origen, direccion){
-    if(self.puedeDisparar()){
-      cooldown = true
-      balasEnCargador -= 1
-      self.iniciarCooldown()
-      const celdaDeDisparo = direccion.siguientePosicion(origen) //dispara una posicion adelante del policia
-      const proyectil = new Proyectil(position = celdaDeDisparo, direccion = direccion)
-      game.addVisual(proyectil)
-      proyectil.iniciarMovimiento()
-    }
-  }
-
-  method recargar(){
-    balasEnCargador = municionMaxima
-  }
-
-  method puedeDisparar() = not cooldown and balasEnCargador > 0
-
-  //game.schedule hace que se ejecute el bloque despues de tantos milisegundos
-
-  method iniciarCooldown() {
-    game.schedule(cooldownMs, { cooldown = false })
-  }
-
-  // por si un proyectil pasa por la celda de un arma tirada en el piso
-  method recibirImpactoDe(proyectil){}
 
 }

@@ -26,4 +26,6 @@ class Personaje {
     method retroceder() { position = posicionAnterior }
 
     method celdaLibre(destino) = true
+
+    method image()
 }

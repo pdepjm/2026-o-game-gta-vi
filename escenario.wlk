@@ -52,17 +52,17 @@ object puntaje {
 
 object vidas {
     const property position = game.at(1,18)
-    var cantidad = 3
+    var property restantes = 3
 
-    method text() = "Vidas: " + cantidad
+    method text() = "Vidas: " + restantes
 
-    method perderUnaVida() {
-      cantidad -= 1
+    method perderVida(danio) {
+      restantes = (restantes - danio).max(0)
     }
 
-    method cantidad() = cantidad
+    
 
-    method seAgotaron() = cantidad <= 0
+    method seAgotaron() = restantes <= 0
 
     method recibirImpactoDe(proyectil){}
 
