@@ -22,9 +22,9 @@
 
 3. Mecánicas
 
-[] Game over cuando el policía mata al ladrón, con pantalla de puntaje festiva y reinicio del juego.
+[x] Game over cuando el policía mata al ladrón, con pantalla de puntaje festiva y reinicio del juego.
 
-[] Arcade sin victoria: el juego sigue hasta que muere el ladrón.
+[x] Arcade sin victoria: el juego sigue hasta que muere el ladrón.
 
 [] Dinero: tope de 2500 presente en el banco, repartido en celdas de una lista predefinida dentro del banco. Se regenera cada cierto tiempo solo si se entregó algo al camión desde la última regeneración. Falta definir cómo se reparte lo repuesto entre monedas, billetes y diamantes.
 
