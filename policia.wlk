@@ -6,6 +6,8 @@ object policia inherits Personaje(position = game.at(18, 10)) {
 
     override method image() = "policia2.jpg"
 
+    override method posicionInicial() = game.at(18, 10)
+
     override method celdaLibre(destino) = game.getObjectsIn(destino).all({ objeto => objeto.sePuedeAtravesarPolicia() })
 
     method sePuedeAtravesarLadron() = false
@@ -35,5 +37,10 @@ object policia inherits Personaje(position = game.at(18, 10)) {
         if (self.tieneArmaEquipada()) {
             armaActual.recargar()
         }
+    }
+
+    override method reiniciar() {
+        super()
+        armaActual = null
     }
 }

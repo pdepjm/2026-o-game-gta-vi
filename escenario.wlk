@@ -1,4 +1,5 @@
 import wollok.game.*
+import pantallas.gameover.*
 
 object camion{
     const property position = game.origin()
@@ -48,25 +49,35 @@ object puntaje {
     //es solo texto de HUD, no bloquea a nadie
     method sePuedeAtravesarLadron() = true
     method sePuedeAtravesarPolicia() = true
+
+    method reiniciar() { puntos = 0 }
 }
 
 object vidas {
-    const property position = game.at(1,18)
+    const property position = game.at(1, 18)
     var property restantes = 3
 
     method text() = "Vidas: " + restantes
 
     method perderVida(danio) {
-      restantes = (restantes - danio).max(0)
+        restantes = (restantes - danio).max(0)
     }
-
-    
 
     method seAgotaron() = restantes <= 0
 
-    method recibirImpactoDe(proyectil){}
+    method reiniciar() { restantes = 3 }
 
-    //es solo texto de HUD, no bloquea a nadie
+    method sePuedeAtravesarLadron() = true
+    method sePuedeAtravesarPolicia() = true
+}
+
+// Puntaje mostrado en la pantalla GameOver
+object puntajeFinal {
+    var property position = game.at(6, 12) 
+
+    method text() = "Puntaje final: " + puntaje.puntos()
+    method textColor() = "000000FF"
+
     method sePuedeAtravesarLadron() = true
     method sePuedeAtravesarPolicia() = true
 }

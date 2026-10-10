@@ -27,5 +27,13 @@ class Personaje {
 
     method celdaLibre(destino) = true
 
+    method reiniciar() {
+        position = self.posicionInicial()
+        posicionAnterior = position
+        direccion = abajo
+    }
+
+    method posicionInicial()
+
     method image()
 }

@@ -1,3 +1,4 @@
+import gestorJuego.*
 import wollok.game.*
 import personaje.*
 import escenario.*
@@ -9,6 +10,8 @@ object ladron inherits Personaje(position = game.at(0, 1)) {
     var objetoQueCarga = null
 
     override method image() = "ladron2.png"
+
+    override method posicionInicial() = game.at(0, 1)
 
     override method celdaLibre(destino) = game.getObjectsIn(destino).all({ objeto => objeto.sePuedeAtravesarLadron() })
 
@@ -53,9 +56,15 @@ object ladron inherits Personaje(position = game.at(0, 1)) {
     method recibirDisparo(danio) {
         vidas.perderVida(danio)
         if (vidas.seAgotaron()) {
-            game.removeVisual(self)
+            gestorJuego.gameover()
         }
     }
 
     method modificarVelocidad(modificador){ velocidad += modificador }
+
+    override method reiniciar() {
+        super()
+        objetoQueCarga = null
+        velocidad = velocidadBase
+    }
 }
