@@ -25,6 +25,7 @@ object policia inherits Personaje(position = game.at(18, 10)) {
     method tomarArma(arma){
         armaActual = arma
         game.removeVisual(arma)
+        io.removeCollitionHandler(self.identity())
     }
 
     method disparar(){

@@ -70,6 +70,7 @@ object municion {
   method serRecogidaPor(policia){
     policia.recargar()
     game.removeVisual(self)
+    io.removeCollitionHandler(self.identity())
   }
 
 }

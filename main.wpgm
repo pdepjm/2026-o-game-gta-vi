@@ -7,6 +7,7 @@ program juego {
     game.height(20)
     game.width(20)
     game.cellSize(50)
+    game.boardGround("fondo.png")
 
     gestorJuego.configurarJuegoBase()
     gestorJuego.mostrarPantalla(pantallaInicio)

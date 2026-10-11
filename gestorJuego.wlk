@@ -64,7 +64,6 @@ object gestorJuego {
 
     method configurarColisiones() {
         game.onCollideDo(camion, { personaje => personaje.chocarConCamion(camion) })
-        game.onCollideDo(municion, { personaje => personaje.chocarConMunicion(municion) })
     }
 
     method agregarDinero() {
@@ -88,7 +87,9 @@ object gestorJuego {
         agregar.apply(new Pistola(position = game.at(16, 11)))
         agregar.apply(new Escopeta(position = game.at(16, 10)))
 
+        //la municion se registra en cada partida (no una sola vez) porque gameover() da de baja el handler de todos los items
         game.addVisual(municion)
+        game.onCollideDo(municion, { personaje => personaje.chocarConMunicion(municion) })
         itemsDeLaPartida.add(municion)
     }
 
@@ -119,7 +120,11 @@ object gestorJuego {
         game.removeVisual(camion)
         game.removeVisual(puntaje)
         game.removeVisual(vidas)
-        itemsDeLaPartida.forEach({ item => game.removeVisual(item) })
+        //ademas de sacar el item del escenario hay que dar de baja su handler de colision
+        itemsDeLaPartida.forEach({ item =>
+            game.removeVisual(item)
+            io.removeCollitionHandler(item.identity())
+        })
         itemsDeLaPartida = []
         self.mostrarPantalla(pantallaGameOver)
         game.addVisual(puntajeFinal)

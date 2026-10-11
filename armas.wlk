@@ -14,7 +14,7 @@ method sePuedeAtravesarPolicia() = true
 method sePuedeAtravesarLadron() = true
 
 method disparar(origen, direccion){
-    if(self.puedeDisparar()){
+    if(not self.puedeDisparar()){throw new DomainException(message = "No se puede disparar")}
       cooldown = true
       balasEnCargador -= 1
       self.iniciarCooldown()
@@ -22,7 +22,7 @@ method disparar(origen, direccion){
       const proyectil = new Proyectil(position = celdaDeDisparo, direccion = direccion, danioProyectil = danio)
       game.addVisual(proyectil)
       proyectil.iniciarMovimiento()
-    }
+    
   }
 
 method puedeDisparar() = not cooldown and balasEnCargador > 0

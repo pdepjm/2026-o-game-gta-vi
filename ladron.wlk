@@ -37,6 +37,7 @@ object ladron inherits Personaje(position = game.at(0, 1)) {
             objetoQueCarga = dinero
             dinero.alSerCargadoPor(self)
             game.removeVisual(dinero)
+            io.removeCollitionHandler(dinero.identity())
         }
     }
 
