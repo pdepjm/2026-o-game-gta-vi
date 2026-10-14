@@ -167,7 +167,7 @@ describe "Entrega 1" {
     policia.position(game.at(12, 12))
     policia.tomarArma(arma)
 
-    municion.serRecogidaPor(policia)
+    new Municion().serRecogidaPor(policia)
 
     assert.equals(7, arma.balasEnCargador())
   }

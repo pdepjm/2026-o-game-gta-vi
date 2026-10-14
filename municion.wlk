@@ -59,8 +59,8 @@ class Proyectil{
   method sePuedeAtravesarPolicia() = true
 }
 
-object municion {
-  const property position = game.at(14, 10)
+class Municion {
+  const property position = game.origin()
 
   method image() = "municion2.jpg"
   method sePuedeAtravesarPolicia() = true

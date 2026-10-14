@@ -1,10 +1,12 @@
 import wollok.game.*
 import pantallas.gameover.*
 
+//el camion ocupa dos celdas por cuestiones decorativas
+//este objeto es la parte de adelante y tiene toda la logica de la entrega
 object camion{
-    const property position = game.origin()
+    const property position = game.at(1, 0)
 
-    method image() = "camion2.png"
+    method image() = "camionAdelante.png"
 
     method recibirEntregaDe(ladron){
         puntaje.sumar(ladron.valorCarga())
@@ -23,6 +25,19 @@ object camion{
     method recibirImpactoDe(proyectil){}
 
 }
+
+//parte de atras del camio, se comporta igual que la de adelante porque delega todo en camion
+object camionAtras{
+    const property position = game.at(2, 0)
+
+    method image() = "camionAtras.png"
+
+    method sePuedeAtravesarLadron() = camion.sePuedeAtravesarLadron()
+    method sePuedeAtravesarPolicia() = camion.sePuedeAtravesarPolicia()
+
+    method recibirImpactoDe(proyectil){ camion.recibirImpactoDe(proyectil) }
+}
+
 class Pared {
   const property position = game.origin()
   method image() = "pared.jpg"
@@ -32,8 +47,18 @@ class Pared {
   method recibirImpactoDe(proyectil){ proyectil.destruir() }
 }
 
+//igual que una pared pero con la imagen de las barreras de la calle
+class BarreraVial inherits Pared {
+  override method image() = "barreraVial2.png"
+}
+
+//auto de policia de decoracion es un obstaculo fijo
+object autoPolicia inherits Pared(position = game.at(18, 0)) {
+  override method image() = "autoPolicia.png"
+}
+
 object puntaje {
-    const property position = game.at(1, 19)
+    const property position = game.at(0, 19)
     var puntos = 0
 
     method text() = "Puntos: " + puntos
@@ -54,7 +79,7 @@ object puntaje {
 }
 
 object vidas {
-    const property position = game.at(1, 18)
+    const property position = game.at(2, 19)
     var property restantes = 3
 
     method text() = "Vidas: " + restantes
@@ -64,6 +89,8 @@ object vidas {
     }
 
     method seAgotaron() = restantes <= 0
+
+    method recibirImpactoDe(proyectil){}
 
     method reiniciar() { restantes = 3 }
 

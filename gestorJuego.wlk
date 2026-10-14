@@ -21,6 +21,7 @@ object gestorJuego {
     //se llama UNA sola vez, al arrancar el programa
     method configurarJuegoBase() {
         self.crearParedes()
+        game.addVisual(autoPolicia)
         self.configurarTeclado()
         self.configurarColisiones()
         keyboard.enter().onPressDo({ self.accionarEnterActual() })
@@ -38,14 +39,48 @@ object gestorJuego {
     }
 
     method crearParedes() {
-        const filaDeArriba = (-1..game.width()).map({i => new Pared(position = game.at(i, game.height()))})
-        const filaDeAbajo = (-1..game.width()).map({i => new Pared(position = game.at(i, -1))})
-        const columnaIzquierda = (0..(game.height() - 1)).map({j => new Pared(position = game.at(-1, j))})
-        const columnaDerecha = (0..(game.height() - 1)).map({j => new Pared(position = game.at(game.width(), j))})
-        filaDeArriba.forEach({ pared => game.addVisual(pared) })
-        filaDeAbajo.forEach({ pared => game.addVisual(pared) })
-        columnaIzquierda.forEach({ pared => game.addVisual(pared) })
-        columnaDerecha.forEach({ pared => game.addVisual(pared) })
+        // se guardan en un set para que las esquina
+        const celdas = #{}
+        const celda = { x, y => celdas.add([x, y]) }
+        const linea = { x1, y1, x2, y2 =>
+            (x1.min(x2)..x1.max(x2)).forEach({ x =>
+                (y1.min(y2)..y1.max(y2)).forEach({ y => celda.apply(x, y) })
+            })
+        }
+
+        linea.apply(1, 1, 1, 20)
+        linea.apply(1, 20, 20, 20)
+        linea.apply(20, 20, 20, 1)
+        linea.apply(5, 4, 17, 4)
+        linea.apply(7, 4, 7, 16)
+        linea.apply(12, 4, 12, 9)
+        linea.apply(16, 6, 16, 16)
+        linea.apply(17, 7, 19, 7)
+
+        //fila 0 cierra el borde de abajo para que nadie salga del mapa
+        linea.apply(1, 0, 20, 0)
+
+        celda.apply(19, 4)
+        celda.apply(16, 19)
+        celda.apply(8, 9)
+        celda.apply(9, 6)
+        celda.apply(10, 6)
+        celda.apply(5, 6)
+        celda.apply(5, 7)
+        celda.apply(5, 9)
+        celda.apply(5, 10)
+        celda.apply(5, 12)
+        celda.apply(5, 13)
+        celda.apply(5, 15)
+        celda.apply(5, 16)
+        celda.apply(11, 9)
+
+        //las celdas que caen en la calle (filas 1 a 3) son barreras viales; el resto, paredes
+        const ultimaFilaDeLaCalle = 3
+        celdas.forEach({ c =>
+            const posicion = game.at(c.get(0) - 1, c.get(1) - 1)
+            game.addVisual(if (c.get(1) <= ultimaFilaDeLaCalle) new BarreraVial(position = posicion) else new Pared(position = posicion))
+        })
     }
 
     method configurarTeclado() {
@@ -64,6 +99,7 @@ object gestorJuego {
 
     method configurarColisiones() {
         game.onCollideDo(camion, { personaje => personaje.chocarConCamion(camion) })
+        game.onCollideDo(camionAtras, { personaje => personaje.chocarConCamion(camion) })
     }
 
     method agregarDinero() {
@@ -72,10 +108,12 @@ object gestorJuego {
             game.onCollideDo(dinero, { personaje => personaje.chocarConDinero(dinero) })
             itemsDeLaPartida.add(dinero)
         }
-        agregar.apply(new Moneda(position = game.at(5, 5)))
-        agregar.apply(new Moneda(position = game.at(7, 5)))
-        agregar.apply(new BolsaDeDinero(position = game.at(9, 5)))
-        agregar.apply(new Diamante(position = game.at(11, 5)))
+        agregar.apply(new Moneda(position = game.at(3, 0)))
+        agregar.apply(new Moneda(position = game.at(4, 0)))
+        agregar.apply(new BolsaDeDinero(position = game.at(5, 0)))
+        agregar.apply(new BolsaDeDinero(position = game.at(6, 0)))
+        agregar.apply(new Diamante(position = game.at(7, 0)))
+        agregar.apply(new Diamante(position = game.at(8, 0)))
     }
 
     method agregarArmas() {
@@ -84,21 +122,31 @@ object gestorJuego {
             game.onCollideDo(arma, { personaje => personaje.chocarConArma(arma) })
             itemsDeLaPartida.add(arma)
         }
-        agregar.apply(new Pistola(position = game.at(16, 11)))
-        agregar.apply(new Escopeta(position = game.at(16, 10)))
+        agregar.apply(new Pistola(position = game.at(17, 0)))
+        agregar.apply(new Escopeta(position = game.at(16, 0)))
+    }
 
-        //la municion se registra en cada partida (no una sola vez) porque gameover() da de baja el handler de todos los items
-        game.addVisual(municion)
-        game.onCollideDo(municion, { personaje => personaje.chocarConMunicion(municion) })
-        itemsDeLaPartida.add(municion)
+    method agregarMuniciones() {
+        const agregar = { municion =>
+            game.addVisual(municion)
+            game.onCollideDo(municion, { personaje => personaje.chocarConMunicion(municion) })
+            itemsDeLaPartida.add(municion)
+        }
+        agregar.apply(new Municion(position = game.at(15, 0)))
+        agregar.apply(new Municion(position = game.at(14, 0)))
+    }
+
+    //se agrega despues de las paredes, asi se dibuja encima de la pared de arriba
+    method agregarHud() {
+        game.addVisual(puntaje)
+        game.addVisual(vidas)
     }
 
     method agregarPersonajes() {
         game.addVisual(camion)
+        game.addVisual(camionAtras)
         game.addVisual(policia)
         game.addVisual(ladron)
-        game.addVisual(puntaje)
-        game.addVisual(vidas)
     }
 
     //se llama al apretar ENTER desde pantallaReglas
@@ -110,7 +158,9 @@ object gestorJuego {
         game.removeVisual(puntajeFinal)
         self.agregarDinero()
         self.agregarArmas()
+        self.agregarMuniciones()
         self.agregarPersonajes()
+        self.agregarHud()
     }
 
     method gameover() {
@@ -118,6 +168,7 @@ object gestorJuego {
         game.removeVisual(ladron)
         game.removeVisual(policia)
         game.removeVisual(camion)
+        game.removeVisual(camionAtras)
         game.removeVisual(puntaje)
         game.removeVisual(vidas)
         //ademas de sacar el item del escenario hay que dar de baja su handler de colision

@@ -3,15 +3,15 @@ import wollok.game.*
 import personaje.*
 import escenario.*
 
-object ladron inherits Personaje(position = game.at(0, 1)) {
+object ladron inherits Personaje(position = game.at(1, 1)) {
     const velocidadBase = 265
     var velocidad = velocidadBase
     var ultimoMovimiento = 0
     var objetoQueCarga = null
 
-    override method image() = "ladron2.png"
+    override method image() = direccion.imagenLadron()
 
-    override method posicionInicial() = game.at(0, 1)
+    override method posicionInicial() = game.at(1, 1)
 
     override method celdaLibre(destino) = game.getObjectsIn(destino).all({ objeto => objeto.sePuedeAtravesarLadron() })
 
