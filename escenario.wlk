@@ -40,7 +40,7 @@ object camionAtras{
 
 class Pared {
   const property position = game.origin()
-  method image() = "pared.jpg"
+  method image() = "pared.png"
   method sePuedeAtravesarLadron() = false
   method sePuedeAtravesarPolicia() = false
 
@@ -50,6 +50,32 @@ class Pared {
 //igual que una pared pero con la imagen de las barreras de la calle
 class BarreraVial inherits Pared {
   override method image() = "barreraVial2.png"
+}
+
+//cada mostrador ocupa dos celdas de abajo y la de arriba
+class MostradorAbajo inherits Pared {
+  override method image() = "mostradorAbajo.png"
+}
+
+class MostradorArriba inherits Pared {
+  override method image() = "mostradorArriba.png"
+}
+
+//un escritorio ocupa dos celdas: se arma con una mitad izquierda y una derecha
+class EscritorioIzquierdo inherits Pared {
+  override method image() = "escritorioVerticalAbajo.png"
+}
+
+class EscritorioDerecho inherits Pared {
+  override method image() = "escritorioVerticalArriba.png"
+}
+
+object escritorioGerenteIzquierdo inherits Pared(position = game.at(8, 5)) {
+    override method image() = "escritorioGerenteIzq.png"
+}
+
+object escritorioGerenteDerecho inherits Pared(position = game.at(9, 5)) {
+    override method image() = "escritorioGerenteDer.png"
 }
 
 //auto de policia de decoracion es un obstaculo fijo

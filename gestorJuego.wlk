@@ -21,7 +21,11 @@ object gestorJuego {
     //se llama UNA sola vez, al arrancar el programa
     method configurarJuegoBase() {
         self.crearParedes()
+        self.crearMostradores()
+        self.crearEscritorios()
         game.addVisual(autoPolicia)
+        game.addVisual(escritorioGerenteIzquierdo)
+        game.addVisual(escritorioGerenteDerecho)
         self.configurarTeclado()
         self.configurarColisiones()
         keyboard.enter().onPressDo({ self.accionarEnterActual() })
@@ -52,9 +56,9 @@ object gestorJuego {
         linea.apply(1, 20, 20, 20)
         linea.apply(20, 20, 20, 1)
         linea.apply(5, 4, 17, 4)
-        linea.apply(7, 4, 7, 16)
-        linea.apply(12, 4, 12, 9)
-        linea.apply(16, 6, 16, 16)
+        linea.apply(6, 4, 6, 16)
+        linea.apply(13, 5, 13, 9)
+        linea.apply(16, 7, 16, 16)
         linea.apply(17, 7, 19, 7)
 
         //fila 0 cierra el borde de abajo para que nadie salga del mapa
@@ -62,24 +66,33 @@ object gestorJuego {
 
         celda.apply(19, 4)
         celda.apply(16, 19)
-        celda.apply(8, 9)
-        celda.apply(9, 6)
-        celda.apply(10, 6)
-        celda.apply(5, 6)
-        celda.apply(5, 7)
-        celda.apply(5, 9)
-        celda.apply(5, 10)
-        celda.apply(5, 12)
-        celda.apply(5, 13)
-        celda.apply(5, 15)
-        celda.apply(5, 16)
         celda.apply(11, 9)
+        celda.apply(7, 9)
+        celda.apply(8, 9)
+        celda.apply(4, 4)
+        celda.apply(12, 9)
 
         //las celdas que caen en la calle (filas 1 a 3) son barreras viales; el resto, paredes
         const ultimaFilaDeLaCalle = 3
         celdas.forEach({ c =>
             const posicion = game.at(c.get(0) - 1, c.get(1) - 1)
             game.addVisual(if (c.get(1) <= ultimaFilaDeLaCalle) new BarreraVial(position = posicion) else new Pared(position = posicion))
+        })
+    }
+
+    //mostradores en la columna 4: cada uno ocupa dos celdas (filas 6-7, 9-10, 12-13 y 15-16, contadas de 1 a 20)
+    method crearMostradores() {
+        [6, 9, 12, 15].forEach({ filaDeAbajo =>
+            game.addVisual(new MostradorAbajo(position = game.at(3, filaDeAbajo - 1)))
+            game.addVisual(new MostradorArriba(position = game.at(3, filaDeAbajo)))
+        })
+    }
+
+    //escritorios verticales (columna 8, filas 11-12 y 14-15, contadas de 1 a 20): todavia no hay assets en vertical, se usan las mitades del escritorio del gerente
+    method crearEscritorios() {
+        [11, 14].forEach({ filaDeAbajo =>
+            game.addVisual(new EscritorioIzquierdo(position = game.at(7, filaDeAbajo - 1)))
+            game.addVisual(new EscritorioDerecho(position = game.at(7, filaDeAbajo)))
         })
     }
 
@@ -108,12 +121,14 @@ object gestorJuego {
             game.onCollideDo(dinero, { personaje => personaje.chocarConDinero(dinero) })
             itemsDeLaPartida.add(dinero)
         }
-        agregar.apply(new Moneda(position = game.at(3, 0)))
-        agregar.apply(new Moneda(position = game.at(4, 0)))
-        agregar.apply(new BolsaDeDinero(position = game.at(5, 0)))
-        agregar.apply(new BolsaDeDinero(position = game.at(6, 0)))
-        agregar.apply(new Diamante(position = game.at(7, 0)))
-        agregar.apply(new Diamante(position = game.at(8, 0)))
+        //las celdas se cuentan de 1 a 20 (como en pantalla): se resta 1 para el juego
+        const celda = { c => game.at(c.get(0) - 1, c.get(1) - 1) }
+        const monedas = [[19, 17], [19, 18], [19, 19], [7, 8], [8, 8], [9, 12], [9, 15], [5, 6], [5, 9], [5, 12]]
+        const bolsas = [[5, 15], [7, 11], [7, 14], [19, 5], [19, 6], [19, 12], [12, 6], [12, 7], [12, 5], [12, 8], [19, 13], [19, 14], [19, 15]]
+        const diamantes = [[17, 8], [18, 8], [19, 8], [9, 5], [17, 9], [18, 9], [19, 9]]
+        monedas.forEach({ c => agregar.apply(new Moneda(position = celda.apply(c))) })
+        bolsas.forEach({ c => agregar.apply(new BolsaDeDinero(position = celda.apply(c))) })
+        diamantes.forEach({ c => agregar.apply(new Diamante(position = celda.apply(c))) })
     }
 
     method agregarArmas() {

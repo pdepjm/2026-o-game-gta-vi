@@ -62,7 +62,7 @@ class Proyectil{
 class Municion {
   const property position = game.origin()
 
-  method image() = "municion2.jpg"
+  method image() = "municion.png"
   method sePuedeAtravesarPolicia() = true
   method sePuedeAtravesarLadron() = true
 

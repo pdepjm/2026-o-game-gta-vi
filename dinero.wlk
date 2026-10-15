@@ -4,7 +4,7 @@ class Moneda{
     const property valor = 10
     const property position = game.origin()
 
-    method image() = "moneda2.jpg"
+    method image() = "moneda.png"
 
     method serRecogidoPor(ladron){
         ladron.cargar(self)
@@ -22,7 +22,7 @@ class BolsaDeDinero{
     const property valor = 100
     const property position = game.origin()
 
-    method image() = "bolsaDeDinero2.png"
+    method image() = "bolsa.png"
 
     method serRecogidoPor(ladron){
         ladron.cargar(self)
@@ -42,7 +42,7 @@ class Diamante{
     const property valor = 500
     const property position = game.origin()
 
-    method image() = "diamante2.png"
+    method image() = "diamante.png"
 
     method serRecogidoPor(ladron){
         ladron.cargar(self)

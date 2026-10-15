@@ -41,12 +41,12 @@ method recibirImpactoDe(proyectil){}
 
 class Pistola inherits Arma(municionMaxima = 7, position = game.at(16, 11), cooldownMs = 1500, danio = 1){
  
-  override method image() = "pistola.jpg"
+  override method image() = "pistola.png"
 
 }
 
 class Escopeta inherits Arma(municionMaxima = 2, position = game.at(16, 10), cooldownMs = 2500, danio = 2){
 
-    override method image() = "escopata2.png"
+    override method image() = "escopeta.png"
 
 }
