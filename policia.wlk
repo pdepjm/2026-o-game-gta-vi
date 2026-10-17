@@ -1,12 +1,10 @@
 import wollok.game.*
 import personaje.*
 
-object policia inherits Personaje(position = game.at(18, 1)) {
+object policia inherits Personaje(posicionInicial = game.at(18, 1)) {
     var armaActual = null
 
     override method image() = direccion.imagenPolicia()
-
-    override method posicionInicial() = game.at(18, 1)
 
     override method celdaLibre(destino) = game.getObjectsIn(destino).all({ objeto => objeto.sePuedeAtravesarPolicia() })
 

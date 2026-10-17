@@ -1,14 +1,16 @@
-import municion.*
+import proyectil.*
 
 class Arma{
-    const municionMaxima   
-    var property balasEnCargador = municionMaxima
-    const property position
+    const municionMaxima
+    var balasEnCargador = municionMaxima
+    const property position = game.origin()
     var cooldown = false
     const cooldownMs
     const danio
 
 method image()
+
+method balasEnCargador() = balasEnCargador
 
 method sePuedeAtravesarPolicia() = true
 method sePuedeAtravesarLadron() = true
@@ -39,13 +41,13 @@ method recibirImpactoDe(proyectil){}
 
 }
 
-class Pistola inherits Arma(municionMaxima = 7, position = game.at(16, 11), cooldownMs = 1500, danio = 1){
+class Pistola inherits Arma(municionMaxima = 7, cooldownMs = 1500, danio = 1){
  
   override method image() = "pistola.png"
 
 }
 
-class Escopeta inherits Arma(municionMaxima = 2, position = game.at(16, 10), cooldownMs = 2500, danio = 2){
+class Escopeta inherits Arma(municionMaxima = 2, cooldownMs = 2500, danio = 2){
 
     override method image() = "escopeta.png"
 

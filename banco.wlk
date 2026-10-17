@@ -4,19 +4,36 @@ import dinero.*
 object banco {
     const dineroEnMapa = []
 
-    const celdasDeMonedas = [[19, 17], [19, 18], [19, 19], [7, 8], [8, 8], [9, 12], [9, 15], [5, 6], [5, 9], [5, 12]]
-    const celdasDeBolsas = [[5, 15], [7, 11], [7, 14], [19, 5], [19, 6], [19, 12], [12, 6], [12, 7], [12, 5], [12, 8], [19, 13], [19, 14], [19, 15]]
-    const celdasDeDiamantes = [[17, 8], [18, 8], [19, 8], [9, 5], [17, 9], [18, 9], [19, 9]]
+    //las celdas se cuentan de 1 a 20 (como en pantalla): se resta 1 para el juego
+    method celda(x, y) = game.at(x - 1, y - 1)
+
+    method celdasDeMonedas() = [
+        self.celda(19, 17), self.celda(19, 18), self.celda(19, 19), self.celda(7, 8),
+        self.celda(8, 8), self.celda(9, 12), self.celda(9, 15), self.celda(5, 6),
+        self.celda(5, 9), self.celda(5, 12)
+    ]
+
+    method celdasDeBolsas() = [
+        self.celda(5, 15), self.celda(7, 11), self.celda(7, 14), self.celda(19, 5),
+        self.celda(19, 6), self.celda(19, 12), self.celda(12, 6), self.celda(12, 7),
+        self.celda(12, 5), self.celda(12, 8), self.celda(19, 13), self.celda(19, 14),
+        self.celda(19, 15)
+    ]
+
+    method celdasDeDiamantes() = [
+        self.celda(17, 8), self.celda(18, 8), self.celda(19, 8), self.celda(9, 5),
+        self.celda(17, 9), self.celda(18, 9), self.celda(19, 9)
+    ]
 
     //crea dinero NUEVO en las celdas del banco: se usa al empezar la partida y cada vez que el mapa se queda sin dinero
     method reponer() {
-        self.reponerEn(celdasDeMonedas, { posicion => new Moneda(position = posicion) })
-        self.reponerEn(celdasDeBolsas, { posicion => new BolsaDeDinero(position = posicion) })
-        self.reponerEn(celdasDeDiamantes, { posicion => new Diamante(position = posicion) })
+        self.reponerEn(self.celdasDeMonedas(), { posicion => new Moneda(position = posicion) })
+        self.reponerEn(self.celdasDeBolsas(), { posicion => new BolsaDeDinero(position = posicion) })
+        self.reponerEn(self.celdasDeDiamantes(), { posicion => new Diamante(position = posicion) })
     }
 
-    method reponerEn(celdas, nuevoDinero) {
-        celdas.forEach({ c => self.agregar(nuevoDinero.apply(game.at(c.get(0) - 1, c.get(1) - 1))) })
+    method reponerEn(posiciones, nuevoDinero) {
+        posiciones.forEach({ posicion => self.agregar(nuevoDinero.apply(posicion)) })
     }
 
     //ademas de mostrarlo, el dinero se registra para detectar cuando lo toca un personaje

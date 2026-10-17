@@ -1,22 +1,18 @@
 import pantallas.gameover.*
 import pantallas.inicio.*
 import wollok.game.*
-import personaje.*
 import ladron.*
 import policia.*
 import municion.*
 import escenario.*
+import hud.*
 import banco.*
-import direcciones.*
 import armas.*
-import pantallas.pantalla.*
 
 object gestorJuego {
     var jugando = false
     var pantallaActual = null
     var itemsDeLaPartida = []
-
-    method jugando() = jugando
 
     //se llama UNA sola vez, al arrancar el programa
     method configurarJuegoBase() {
@@ -28,6 +24,8 @@ object gestorJuego {
         game.addVisual(escritorioGerenteDerecho)
         self.configurarTeclado()
         self.configurarColisiones()
+        //el ladron no conoce la partida: el gestor le dice que hacer cuando se queda sin vidas
+        ladron.alMorir({ self.gameover() })
         keyboard.enter().onPressDo({ self.accionarEnterActual() })
     }
 
@@ -43,7 +41,16 @@ object gestorJuego {
     }
 
     method crearParedes() {
-        // se guardan en un set para que las esquina
+        //las celdas que caen en la calle (filas 1 a 3) son barreras viales; el resto, paredes
+        const ultimaFilaDeLaCalle = 3
+        self.celdasDeParedes().forEach({ c =>
+            const posicion = game.at(c.get(0) - 1, c.get(1) - 1)
+            game.addVisual(if (c.get(1) <= ultimaFilaDeLaCalle) new BarreraVial(position = posicion) else new Pared(position = posicion))
+        })
+    }
+
+    //celdas contadas de 1 a 20 
+    method celdasDeParedes() {
         const celdas = #{}
         const celda = { x, y => celdas.add([x, y]) }
         const linea = { x1, y1, x2, y2 =>
@@ -72,12 +79,7 @@ object gestorJuego {
         celda.apply(4, 4)
         celda.apply(12, 9)
 
-        //las celdas que caen en la calle (filas 1 a 3) son barreras viales; el resto, paredes
-        const ultimaFilaDeLaCalle = 3
-        celdas.forEach({ c =>
-            const posicion = game.at(c.get(0) - 1, c.get(1) - 1)
-            game.addVisual(if (c.get(1) <= ultimaFilaDeLaCalle) new BarreraVial(position = posicion) else new Pared(position = posicion))
-        })
+        return celdas
     }
 
     //mostradores en la columna 4: cada uno ocupa dos celdas (filas 6-7, 9-10, 12-13 y 15-16, contadas de 1 a 20)
@@ -88,11 +90,11 @@ object gestorJuego {
         })
     }
 
-    //escritorios verticales (columna 8, filas 11-12 y 14-15, contadas de 1 a 20): todavia no hay assets en vertical, se usan las mitades del escritorio del gerente
+    //escritorios verticales en la columna 8: cada uno ocupa dos celdas (filas 11-12 y 14-15, contadas de 1 a 20)
     method crearEscritorios() {
         [11, 14].forEach({ filaDeAbajo =>
-            game.addVisual(new EscritorioIzquierdo(position = game.at(7, filaDeAbajo - 1)))
-            game.addVisual(new EscritorioDerecho(position = game.at(7, filaDeAbajo)))
+            game.addVisual(new EscritorioVerticalAbajo(position = game.at(7, filaDeAbajo - 1)))
+            game.addVisual(new EscritorioVerticalArriba(position = game.at(7, filaDeAbajo)))
         })
     }
 
@@ -190,7 +192,6 @@ object gestorJuego {
     method reiniciarEstado() {
         ladron.reiniciar()
         policia.reiniciar()
-        vidas.reiniciar()
         puntaje.reiniciar()
     }
 }

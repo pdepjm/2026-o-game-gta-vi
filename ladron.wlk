@@ -1,17 +1,17 @@
-import gestorJuego.*
 import wollok.game.*
 import personaje.*
-import escenario.*
 
-object ladron inherits Personaje(position = game.at(1, 1)) {
+object ladron inherits Personaje(posicionInicial = game.at(1, 1)) {
     const velocidadBase = 265
     var velocidad = velocidadBase
     var ultimoMovimiento = 0
     var objetoQueCarga = null
+    const vidasMaximas = 3
+    var vidasRestantes = vidasMaximas
+    //lo que pasa cuando se queda sin vidas lo define quien arma el juego: el ladron no conoce el flujo de la partida
+    var accionAlMorir = {}
 
     override method image() = direccion.imagenLadron()
-
-    override method posicionInicial() = game.at(1, 1)
 
     override method celdaLibre(destino) = game.getObjectsIn(destino).all({ objeto => objeto.sePuedeAtravesarLadron() })
 
@@ -20,8 +20,7 @@ object ladron inherits Personaje(position = game.at(1, 1)) {
     override method moverA(destino) {
         if (self.pasoElTiempoDeMovimiento() and self.celdaLibre(destino)) {
             ultimoMovimiento = game.currentTime()
-            posicionAnterior = position
-            position = destino
+            super(destino)
         }
     }
 
@@ -38,7 +37,6 @@ object ladron inherits Personaje(position = game.at(1, 1)) {
     }
 
     method tieneManosLibres() = objetoQueCarga == null
-    method valorCarga() = if (self.tieneManosLibres()) 0 else objetoQueCarga.valor()
 
     method entregarCargaA(camion) {
         if (not self.tieneManosLibres()) {
@@ -49,15 +47,19 @@ object ladron inherits Personaje(position = game.at(1, 1)) {
         }
     }
 
+    method vidasRestantes() = vidasRestantes
+
+    method alMorir(accion) { accionAlMorir = accion }
+
     method recibirImpactoDe(proyectil) {
         self.recibirDisparo(proyectil.danioProyectil())
         proyectil.destruir()
     }
 
     method recibirDisparo(danio) {
-        vidas.perderVida(danio)
-        if (vidas.seAgotaron()) {
-            gestorJuego.gameover()
+        vidasRestantes = (vidasRestantes - danio).max(0)
+        if (vidasRestantes == 0) {
+            accionAlMorir.apply()
         }
     }
 
@@ -67,5 +69,6 @@ object ladron inherits Personaje(position = game.at(1, 1)) {
         super()
         objetoQueCarga = null
         velocidad = velocidadBase
+        vidasRestantes = vidasMaximas
     }
 }

@@ -2,7 +2,8 @@ import wollok.game.*
 import direcciones.*
 
 class Personaje {
-    var property position
+    const property posicionInicial
+    var property position = posicionInicial
     var property direccion = abajo
     var posicionAnterior = position
 
@@ -28,12 +29,10 @@ class Personaje {
     method celdaLibre(destino) = true
 
     method reiniciar() {
-        position = self.posicionInicial()
+        position = posicionInicial
         posicionAnterior = position
         direccion = abajo
     }
-
-    method posicionInicial()
 
     method image()
 }
