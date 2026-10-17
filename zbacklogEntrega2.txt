@@ -37,7 +37,7 @@
 
 [X] Adaptar los tests de la Entrega 1 al refactor de direcciones y a Personaje.
 
-[] Tests nuevos: direcciones, armas y daño, spawn y regeneración de dinero, game over.
+[X] Tests nuevos: direcciones, armas y daño, spawn y regeneración de dinero, game over.
 
 [] Diagrama de clases en yUML, hecho cuando la herencia ya esté implementada, para que refleje el diseño final (incluyendo que ladron y policia son objetos que heredan de una clase abstracta).
 

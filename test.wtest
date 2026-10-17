@@ -10,6 +10,7 @@ import banco.*
 import escenario.*
 import hud.*
 import armas.*
+import gestorJuego.*
 
 describe "Entrega 1" {
 
@@ -194,5 +195,190 @@ describe "Entrega 1" {
     ladron.recibirImpactoDe(proyectil)
 
     assert.equals(vidasAntes - 2, ladron.vidasRestantes())
+  }
+}
+
+describe "Entrega 2" {
+
+  var murio = false
+
+  //los objetos del juego son unicos: antes de cada test se deja todo como al empezar
+  method initialize() {
+    banco.vaciar()
+    ladron.reiniciar()
+    policia.reiniciar()
+    puntaje.reiniciar()
+    murio = false
+    ladron.alMorir({ murio = true })
+  }
+
+  // ---- banco
+
+  test "las celdas del banco no se repiten ni caen sobre paredes" {
+    const celdasDeDinero = banco.celdasDeMonedas() + banco.celdasDeBolsas() + banco.celdasDeDiamantes()
+    const celdasDeParedes = gestorJuego.celdasDeParedes().map({ c => banco.celda(c.get(0), c.get(1)) })
+
+    assert.equals(celdasDeDinero.size(), celdasDeDinero.asSet().size())
+    assert.that(celdasDeDinero.all({ celda => not celdasDeParedes.contains(celda) }))
+  }
+
+  test "reponer agrega dinero en todas las celdas del banco" {
+    const celdasDeDinero = banco.celdasDeMonedas() + banco.celdasDeBolsas() + banco.celdasDeDiamantes()
+
+    banco.reponer()
+
+    assert.notThat(banco.sinDinero())
+    assert.that(celdasDeDinero.all({ celda => game.getObjectsIn(celda).size() == 1 }))
+    banco.vaciar()
+  }
+
+  test "retirar saca el dinero del banco y del mapa" {
+    const moneda = new Moneda(position = game.at(10, 15))
+    banco.agregar(moneda)
+
+    banco.retirar(moneda)
+
+    assert.that(banco.sinDinero())
+    assert.that(game.getObjectsIn(game.at(10, 15)).isEmpty())
+  }
+
+  test "una entrega no repone el dinero si todavia queda en el mapa" {
+    banco.agregar(new Moneda(position = game.at(10, 15)))
+
+    banco.entregaRealizada()
+
+    assert.that(game.getObjectsIn(banco.celda(19, 17)).isEmpty())
+    banco.vaciar()
+  }
+
+  test "la entrega del ultimo dinero repone el banco" {
+    const moneda = new Moneda(position = game.at(10, 15))
+    banco.agregar(moneda)
+    moneda.serRecogidoPor(ladron)
+
+    ladron.entregarCargaA(camion)
+
+    assert.notThat(banco.sinDinero())
+    banco.vaciar()
+  }
+
+  // ---- dinero y entrega
+
+  test "cada tipo de dinero vale lo que corresponde" {
+    assert.equals(10, new Moneda().valor())
+    assert.equals(100, new BolsaDeDinero().valor())
+    assert.equals(500, new Diamante().valor())
+  }
+
+  test "el ladron con las manos ocupadas no recoge mas dinero" {
+    const primera = new Moneda(position = game.at(10, 15))
+    const segunda = new Moneda(position = game.at(11, 15))
+    banco.agregar(primera)
+    banco.agregar(segunda)
+    primera.serRecogidoPor(ladron)
+
+    segunda.serRecogidoPor(ladron)
+
+    assert.notThat(banco.sinDinero())
+    assert.that(game.getObjectsIn(game.at(11, 15)).contains(segunda))
+    banco.vaciar()
+  }
+
+  test "entregar sin carga no suma puntos" {
+    ladron.entregarCargaA(camion)
+
+    assert.equals(0, puntaje.puntos())
+    assert.that(banco.sinDinero())
+  }
+
+  test "el policia no atraviesa el camion pero el ladron si" {
+    game.addVisual(camion)
+
+    assert.notThat(policia.celdaLibre(camion.position()))
+    assert.that(ladron.celdaLibre(camion.position()))
+    game.removeVisual(camion)
+  }
+
+  test "el ladron y el policia no se atraviesan" {
+    game.addVisual(ladron)
+    game.addVisual(policia)
+    ladron.position(game.at(5, 5))
+    policia.position(game.at(5, 6))
+
+    assert.notThat(ladron.celdaLibre(policia.position()))
+    assert.notThat(policia.celdaLibre(ladron.position()))
+    game.removeVisual(ladron)
+    game.removeVisual(policia)
+  }
+
+  // ---- vidas y reinicio
+
+  test "el ladron muere al quedarse sin vidas" {
+    ladron.recibirDisparo(3)
+
+    assert.equals(0, ladron.vidasRestantes())
+    assert.that(murio)
+  }
+
+  test "el ladron no muere mientras le queden vidas" {
+    ladron.recibirDisparo(2)
+
+    assert.equals(1, ladron.vidasRestantes())
+    assert.notThat(murio)
+  }
+
+  test "reiniciar devuelve a los personajes a su posicion inicial y al ladron sus vidas" {
+    ladron.recibirDisparo(1)
+    ladron.position(game.at(7, 7))
+    policia.position(game.at(7, 8))
+
+    ladron.reiniciar()
+    policia.reiniciar()
+
+    assert.equals(3, ladron.vidasRestantes())
+    assert.equals(game.at(1, 1), ladron.position())
+    assert.equals(game.at(18, 1), policia.position())
+  }
+
+  test "la imagen de los personajes depende de hacia donde miran" {
+    ladron.direccion(izquierda)
+    policia.direccion(arriba)
+
+    assert.equals("ladronIzquierda.png", ladron.image())
+    assert.equals("policiaArriba.png", policia.image())
+  }
+
+  // ---- armas y proyectiles
+
+  test "el danio del proyectil depende del arma" {
+    policia.tomarArma(new Pistola())
+    policia.disparar()
+    const proyectilDePistola = game.allVisuals().last()
+    policia.tomarArma(new Escopeta())
+    policia.disparar()
+    const proyectilDeEscopeta = game.allVisuals().last()
+
+    assert.equals(1, proyectilDePistola.danioProyectil())
+    assert.equals(2, proyectilDeEscopeta.danioProyectil())
+    proyectilDePistola.destruir()
+    proyectilDeEscopeta.destruir()
+  }
+
+  test "no se puede disparar mientras el arma esta en cooldown" {
+    policia.tomarArma(new Pistola())
+    policia.disparar()
+    const proyectil = game.allVisuals().last()
+
+    assert.throwsExceptionWithMessage("No se puede disparar", { policia.disparar() })
+    proyectil.destruir()
+  }
+
+  test "la pared destruye el proyectil que la golpea" {
+    const proyectil = new Proyectil(position = game.at(4, 4), direccion = arriba, danioProyectil = 1)
+    game.addVisual(proyectil)
+
+    new Pared().recibirImpactoDe(proyectil)
+
+    assert.notThat(game.hasVisual(proyectil))
   }
 }
