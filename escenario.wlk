@@ -1,5 +1,6 @@
 import wollok.game.*
 import pantallas.gameover.*
+import banco.*
 
 //el camion ocupa dos celdas por cuestiones decorativas
 //este objeto es la parte de adelante y tiene toda la logica de la entrega
@@ -8,14 +9,14 @@ object camion{
 
     method image() = "camionAdelante.png"
 
-    method recibirEntregaDe(ladron){
-        puntaje.sumar(ladron.valorCarga())
-        ladron.entregarCarga()
+    method recibir(dinero){
+        puntaje.sumar(dinero.valor())
+        banco.entregaRealizada()
     }
 
     //el camion recibe la carga y hace que el ladron no lo pueda atravesar
     method chocarConLadron(ladron){
-        self.recibirEntregaDe(ladron)
+        ladron.entregarCargaA(self)
         ladron.retroceder()
     }
 

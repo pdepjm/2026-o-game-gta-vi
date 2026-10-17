@@ -1,13 +1,19 @@
 import wollok.game.*
+import banco.*
 
-class Moneda{
-    const property valor = 10
+//lo comun a todo el dinero esta aca: cada tipo solo define su valor, su imagen y como afecta al ladron al cargarlo
+class Dinero{
     const property position = game.origin()
 
-    method image() = "moneda.png"
+    method valor()
+    method image()
 
+    //si el ladron tiene las manos ocupadas el dinero se queda en el mapa
     method serRecogidoPor(ladron){
-        ladron.cargar(self)
+        if (ladron.tieneManosLibres()) {
+            banco.retirar(self)
+            ladron.cargar(self)
+        }
     }
 
     method alSerCargadoPor(ladron){}
@@ -18,42 +24,28 @@ class Moneda{
     method recibirImpactoDe(proyectil){}
 }
 
-class BolsaDeDinero{
-    const property valor = 100
-    const property position = game.origin()
+class Moneda inherits Dinero{
+    override method valor() = 10
 
-    method image() = "bolsa.png"
-
-    method serRecogidoPor(ladron){
-        ladron.cargar(self)
-    }
-
-    method alSerCargadoPor(ladron){
-        ladron.modificarVelocidad(-100)
-    }
-
-    method sePuedeAtravesarLadron() = true
-    method sePuedeAtravesarPolicia() = true
-
-    method recibirImpactoDe(proyectil){}
+    override method image() = "moneda.png"
 }
 
-class Diamante{
-    const property valor = 500
-    const property position = game.origin()
+class BolsaDeDinero inherits Dinero{
+    override method valor() = 100
 
-    method image() = "diamante.png"
+    override method image() = "bolsa.png"
 
-    method serRecogidoPor(ladron){
-        ladron.cargar(self)
+    override method alSerCargadoPor(ladron){
+        ladron.modificarVelocidad(-100)
     }
+}
 
-    method alSerCargadoPor(ladron){
+class Diamante inherits Dinero{
+    override method valor() = 500
+
+    override method image() = "diamante.png"
+
+    override method alSerCargadoPor(ladron){
         ladron.modificarVelocidad(100)
     }
-
-    method sePuedeAtravesarLadron() = true
-    method sePuedeAtravesarPolicia() = true
-
-    method recibirImpactoDe(proyectil){}
 }

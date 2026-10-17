@@ -6,7 +6,7 @@ import ladron.*
 import policia.*
 import municion.*
 import escenario.*
-import dinero.*
+import banco.*
 import direcciones.*
 import armas.*
 import pantallas.pantalla.*
@@ -115,22 +115,6 @@ object gestorJuego {
         game.onCollideDo(camionAtras, { personaje => personaje.chocarConCamion(camion) })
     }
 
-    method agregarDinero() {
-        const agregar = { dinero =>
-            game.addVisual(dinero)
-            game.onCollideDo(dinero, { personaje => personaje.chocarConDinero(dinero) })
-            itemsDeLaPartida.add(dinero)
-        }
-        //las celdas se cuentan de 1 a 20 (como en pantalla): se resta 1 para el juego
-        const celda = { c => game.at(c.get(0) - 1, c.get(1) - 1) }
-        const monedas = [[19, 17], [19, 18], [19, 19], [7, 8], [8, 8], [9, 12], [9, 15], [5, 6], [5, 9], [5, 12]]
-        const bolsas = [[5, 15], [7, 11], [7, 14], [19, 5], [19, 6], [19, 12], [12, 6], [12, 7], [12, 5], [12, 8], [19, 13], [19, 14], [19, 15]]
-        const diamantes = [[17, 8], [18, 8], [19, 8], [9, 5], [17, 9], [18, 9], [19, 9]]
-        monedas.forEach({ c => agregar.apply(new Moneda(position = celda.apply(c))) })
-        bolsas.forEach({ c => agregar.apply(new BolsaDeDinero(position = celda.apply(c))) })
-        diamantes.forEach({ c => agregar.apply(new Diamante(position = celda.apply(c))) })
-    }
-
     method agregarArmas() {
         const agregar = { arma =>
             game.addVisual(arma)
@@ -171,7 +155,7 @@ object gestorJuego {
         jugando = true
         itemsDeLaPartida = []
         game.removeVisual(puntajeFinal)
-        self.agregarDinero()
+        banco.reponer()
         self.agregarArmas()
         self.agregarMuniciones()
         self.agregarPersonajes()
@@ -186,6 +170,7 @@ object gestorJuego {
         game.removeVisual(camionAtras)
         game.removeVisual(puntaje)
         game.removeVisual(vidas)
+        banco.vaciar()
         //ademas de sacar el item del escenario hay que dar de baja su handler de colision
         itemsDeLaPartida.forEach({ item =>
             game.removeVisual(item)

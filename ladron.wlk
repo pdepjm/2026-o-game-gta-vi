@@ -33,20 +33,20 @@ object ladron inherits Personaje(position = game.at(1, 1)) {
     method chocarConArma(arma){}
 
     method cargar(dinero){
-        if(self.tieneManosLibres()){
-            objetoQueCarga = dinero
-            dinero.alSerCargadoPor(self)
-            game.removeVisual(dinero)
-            io.removeCollitionHandler(dinero.identity())
-        }
+        objetoQueCarga = dinero
+        dinero.alSerCargadoPor(self)
     }
 
     method tieneManosLibres() = objetoQueCarga == null
     method valorCarga() = if (self.tieneManosLibres()) 0 else objetoQueCarga.valor()
 
-    method entregarCarga() {
-        objetoQueCarga = null
-        velocidad = velocidadBase
+    method entregarCargaA(camion) {
+        if (not self.tieneManosLibres()) {
+            const dinero = objetoQueCarga
+            objetoQueCarga = null
+            velocidad = velocidadBase
+            camion.recibir(dinero)
+        }
     }
 
     method recibirImpactoDe(proyectil) {

@@ -26,11 +26,9 @@
 
 [x] Arcade sin victoria: el juego sigue hasta que muere el ladrón.
 
-[] Dinero: tope de 2500 presente en el banco, repartido en celdas de una lista predefinida dentro del banco. Se regenera cada cierto tiempo solo si se entregó algo al camión desde la última regeneración. Falta definir cómo se reparte lo repuesto entre monedas, billetes y diamantes.
+[X] Dinero: tope fijo de dinero presente en el banco, repartido en celdas de una lista predefinida dentro del banco. Se regenera cuando el ultimo objeto dinero es entregado en el camion
 
-[] Evitar superposiciones al spawnear, chequeando con game.getObjectsIn(celda) que la celda esté vacía.
-
-[] Mapa 20x20 con celdas de 50 px: calle en las filas 0 a 2 (camión a la izquierda, policía a la derecha) y banco en las filas 3 a 19, con paredes definidas a mano. No hace falta terminarlo.
+[X] Mapa 20x20 con celdas de 50 px: calle en las filas 0 a 2 (camión a la izquierda, policía a la derecha) y banco en las filas 3 a 19, con paredes definidas a mano. No hace falta terminarlo.
 
 
 4. Investigación, tests y diagrama
