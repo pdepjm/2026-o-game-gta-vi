@@ -70,4 +70,4 @@ Mensajes:
 
 [X] serRecogidaPor(policia) — le manda recargar(cantidad) a su arma y se elimina del tablero.
 
-[] TESTS ENTREGA1
+[X] TESTS ENTREGA1

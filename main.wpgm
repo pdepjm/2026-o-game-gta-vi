@@ -1,74 +1,16 @@
 import wollok.game.*
-import personajes.*
-import armamento.*
-import escenario.*
-import dinero.*
+import pantallas.inicio.*
+import gestorJuego.*
 
 program juego {
-	game.title("Untitled Game")
-	game.height(20)
-	game.width(20)
-	game.cellSize(50)
+    game.title("Untitled Game")
+    game.height(20)
+    game.width(20)
+    game.cellSize(50)
+    game.boardGround("fondo.png")
 
-	//paredes por fuera del tablero (una celda mas alla de cada borde)
-	const filaDeArriba = (-1..game.width()).map({i => new Pared(position = game.at(i, game.height()))})
-	const filaDeAbajo = (-1..game.width()).map({i => new Pared(position = game.at(i, -1))})
-	const columnaIzquierda = (0..(game.height() - 1)).map({j => new Pared(position = game.at(-1, j))})
-	const columnaDerecha = (0..(game.height() - 1)).map({j => new Pared(position = game.at(game.width(), j))})
-	filaDeArriba.forEach({ pared => game.addVisual(pared) })
-	filaDeAbajo.forEach({ pared => game.addVisual(pared) })
-	columnaIzquierda.forEach({ pared => game.addVisual(pared) })
-	columnaDerecha.forEach({ pared => game.addVisual(pared) })
+    gestorJuego.configurarJuegoBase()
+    gestorJuego.mostrarPantalla(pantallaInicio)
 
-	game.addVisual(camion)
-
-	//el intervalo es fijo y chico; la velocidad real del ladron la controla ladron.moverA
-	keyboard.w().whilePressedDo({ladron.moverseArriba()}, 50)
-	keyboard.s().whilePressedDo({ladron.moverseAbajo()}, 50)
-	keyboard.a().whilePressedDo({ladron.moverseIzquierda()}, 50)
-	keyboard.d().whilePressedDo({ladron.moverseDerecha()}, 50)
-
-	//up down left right son las flechas del teclado
-
-	keyboard.up().whilePressedDo({policia.moverseArriba()}, 300)
-	keyboard.down().whilePressedDo({policia.moverseAbajo()}, 300)
-	keyboard.left().whilePressedDo({policia.moverseIzquierda()}, 300)
-	keyboard.right().whilePressedDo({policia.moverseDerecha()}, 300)
-
-	//tecla P para disparar(tecla de prueba)
-	keyboard.p().onPressDo({ policia.disparar() })
-
-	//dinero de prueba
-	const agregarDinero = { dinero =>
-		game.addVisual(dinero)
-		game.onCollideDo(dinero, { personaje => personaje.chocarConDinero(dinero) })
-	}
-	agregarDinero.apply(new Moneda(position = game.at(5, 5)))
-	agregarDinero.apply(new Moneda(position = game.at(7, 5)))
-	agregarDinero.apply(new BolsaDeDinero(position = game.at(9, 5)))
-	agregarDinero.apply(new Diamante(position = game.at(11, 5)))
-
-	//arma de prueba
-	const agregarArma = { arma =>
-		game.addVisual(arma)
-		game.onCollideDo(arma, { personaje => personaje.chocarConArma(arma) })
-	}
-	agregarArma.apply(new Pistola(position = game.at(5,6)))
-
-	//municion de prueba
-	game.addVisual(municion)
-	game.onCollideDo(municion, { personaje => personaje.chocarConMunicion(municion) })
-
-	//policia y ladron se agrega despues del dinero para al pasar arriba del dinero aparezca el policia o ladron arriba del dinero y no al reves
-	game.addVisual(policia)
-	game.addVisual(ladron)
-
-	// Puntaje y vidas mostrados en la interfaz
-	game.addVisual(puntaje)
-	game.addVisual(vidas)
-
-
-	game.onCollideDo(camion, { personaje => personaje.chocarConCamion(camion) })
-
-	game.start()
+    game.start()
 }
