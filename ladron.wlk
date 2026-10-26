@@ -5,7 +5,7 @@ object ladron inherits Personaje(posicionInicial = game.at(1, 1)) {
     const velocidadBase = 265
     var velocidad = velocidadBase
     var ultimoMovimiento = 0
-    var objetoQueCarga = null
+    var objetoQueCarga = sinCarga
     const vidasMaximas = 3
     var vidasRestantes = vidasMaximas
     //lo que pasa cuando se queda sin vidas lo define quien arma el juego: el ladron no conoce el flujo de la partida
@@ -31,20 +31,19 @@ object ladron inherits Personaje(posicionInicial = game.at(1, 1)) {
     method chocarConMunicion(municion){}
     method chocarConArma(arma){}
 
-    method cargar(dinero){
+    //la carga actual decide si deja levantar otro dinero. Con sinCarga se levanta, con un dinero en las manos no
+    method cargar(dinero){ objetoQueCarga.dejarCargar(dinero, self) }
+
+    method tomar(dinero){
         objetoQueCarga = dinero
         dinero.alSerCargadoPor(self)
     }
 
-    method tieneManosLibres() = objetoQueCarga == null
-
     method entregarCargaA(camion) {
-        if (not self.tieneManosLibres()) {
-            const dinero = objetoQueCarga
-            objetoQueCarga = null
-            velocidad = velocidadBase
-            camion.recibir(dinero)
-        }
+        const carga = objetoQueCarga
+        objetoQueCarga = sinCarga
+        velocidad = velocidadBase
+        carga.serEntregadoA(camion)
     }
 
     method vidasRestantes() = vidasRestantes
@@ -67,8 +66,15 @@ object ladron inherits Personaje(posicionInicial = game.at(1, 1)) {
 
     override method reiniciar() {
         super()
-        objetoQueCarga = null
+        objetoQueCarga = sinCarga
         velocidad = velocidadBase
         vidasRestantes = vidasMaximas
     }
+}
+
+//el ladron con las manos vacias: deja levantar dinero y no tiene nada para entregar
+object sinCarga{
+    method dejarCargar(dinero, ladron){ dinero.cargarseEn(ladron) }
+
+    method serEntregadoA(camion){}
 }

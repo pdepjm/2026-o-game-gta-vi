@@ -8,13 +8,18 @@ class Dinero{
     method valor()
     method image()
 
-    //si el ladron tiene las manos ocupadas el dinero se queda en el mapa
-    method serRecogidoPor(ladron){
-        if (ladron.tieneManosLibres()) {
-            banco.retirar(self)
-            ladron.cargar(self)
-        }
+    method serRecogidoPor(ladron){ ladron.cargar(self) }
+
+    //este dinero es la carga actual del ladron, no puede levantar otro
+    method dejarCargar(otroDinero, ladron){}
+
+    //el dinero sale del banco recien cuando el ladron realmente lo toma
+    method cargarseEn(ladron){
+        banco.retirar(self)
+        ladron.tomar(self)
     }
+
+    method serEntregadoA(camion){ camion.recibir(self) }
 
     method alSerCargadoPor(ladron){}
 

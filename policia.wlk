@@ -2,7 +2,7 @@ import wollok.game.*
 import personaje.*
 
 object policia inherits Personaje(posicionInicial = game.at(18, 1)) {
-    var armaActual = null
+    var armaActual = sinArma
 
     override method image() = direccion.imagenPolicia()
 
@@ -12,11 +12,8 @@ object policia inherits Personaje(posicionInicial = game.at(18, 1)) {
 
     method chocarConDinero(dinero){}
     method chocarConCamion(camion){}
-    method chocarConMunicion(municion){
-        if (self.tieneArmaEquipada()) { municion.serRecogidaPor(self) }
-    }
+    method chocarConMunicion(municion){ armaActual.recogerMunicion(municion, self) }
 
-    method tieneArmaEquipada() = armaActual != null
     method recibirImpactoDe(proyectil){}
     method chocarConArma(arma){ self.tomarArma(arma) }
 
@@ -26,20 +23,21 @@ object policia inherits Personaje(posicionInicial = game.at(18, 1)) {
         io.removeCollitionHandler(arma.identity())
     }
 
-    method disparar(){
-        if (self.tieneArmaEquipada()) {
-            armaActual.disparar(position, direccion)
-        }
-    }
+    method disparar(){armaActual.disparar(position, direccion)}
 
-    method recargar(){
-        if (self.tieneArmaEquipada()) {
-            armaActual.recargar()
-        }
-    }
+    method recargar(){armaActual.recargar()}
 
     override method reiniciar() {
         super()
-        armaActual = null
+        armaActual = sinArma
     }
+}
+
+//el policia sin arma no dispara, no recarga y deja la municion en el mapa
+object sinArma{
+    method disparar(origen, direccion){}
+
+    method recargar(){}
+
+    method recogerMunicion(municion, policia){}
 }

@@ -37,6 +37,11 @@ method recargar(){
     balasEnCargador = municionMaxima
   }
 
+//con un arma equipada la municion se recoge
+method recogerMunicion(municion, policia){
+    municion.serRecogidaPor(policia)
+  }
+
 method recibirImpactoDe(proyectil){}
 
 }

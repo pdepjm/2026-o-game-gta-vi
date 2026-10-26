@@ -126,8 +126,10 @@ describe "Entrega 1" {
 
     moneda.serRecogidoPor(ladron)
 
-    assert.notThat(ladron.tieneManosLibres())
     assert.that(banco.sinDinero())
+    ladron.entregarCargaA(camion)
+    assert.equals(10, puntaje.puntos())
+    banco.vaciar()
   }
 
   test "el camión recibe la carga del ladrón" {
@@ -140,11 +142,10 @@ describe "Entrega 1" {
     ladron.entregarCargaA(camion)
 
     assert.equals(puntosAntes + 10, puntaje.puntos())
-    assert.that(ladron.tieneManosLibres())
     banco.vaciar()
   }
 
-  test "al cargar un billete queda ocupada la mano del ladrón" {
+  test "el ladrón puede cargar una bolsa y entregarla" {
     bolsa = new BolsaDeDinero(position = game.at(5, 9))
     banco.agregar(bolsa)
     ladron.position(game.at(5, 9))
@@ -152,7 +153,6 @@ describe "Entrega 1" {
     bolsa.serRecogidoPor(ladron)
     const puntosAntes = puntaje.puntos()
 
-    assert.notThat(ladron.tieneManosLibres())
     ladron.entregarCargaA(camion)
     assert.equals(puntosAntes + 100, puntaje.puntos())
     banco.vaciar()
@@ -281,6 +281,48 @@ describe "Entrega 2" {
 
     assert.notThat(banco.sinDinero())
     assert.that(game.getObjectsIn(game.at(11, 15)).contains(segunda))
+    banco.vaciar()
+  }
+
+  test "al entregar la carga el ladron queda con las manos vacias" {
+    const moneda = new Moneda(position = game.at(10, 15))
+    banco.agregar(moneda)
+    banco.agregar(new Moneda(position = game.at(11, 15)))
+    moneda.serRecogidoPor(ladron)
+    ladron.entregarCargaA(camion)
+
+    ladron.entregarCargaA(camion)
+
+    assert.equals(10, puntaje.puntos())
+    banco.vaciar()
+  }
+
+  test "despues de entregar el ladron puede cargar otro dinero" {
+    const primera = new Moneda(position = game.at(10, 15))
+    const segunda = new BolsaDeDinero(position = game.at(11, 15))
+    banco.agregar(primera)
+    banco.agregar(segunda)
+    primera.serRecogidoPor(ladron)
+    ladron.entregarCargaA(camion)
+
+    segunda.serRecogidoPor(ladron)
+    ladron.entregarCargaA(camion)
+
+    assert.equals(110, puntaje.puntos())
+    banco.vaciar()
+  }
+
+  test "el ladron con las manos ocupadas conserva su carga" {
+    const moneda = new Moneda(position = game.at(10, 15))
+    const diamante = new Diamante(position = game.at(11, 15))
+    banco.agregar(moneda)
+    banco.agregar(diamante)
+    moneda.serRecogidoPor(ladron)
+    diamante.serRecogidoPor(ladron)
+
+    ladron.entregarCargaA(camion)
+
+    assert.equals(10, puntaje.puntos())
     banco.vaciar()
   }
 
