@@ -7,3 +7,9 @@ class Pantalla {
     method accionarEnter()
     method image()
 }
+
+object sinPantalla {
+    method ocultar() {}
+
+    method accionarEnter() {}
+}

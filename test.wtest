@@ -10,7 +10,7 @@ import banco.*
 import escenario.*
 import hud.*
 import armas.*
-import gestorJuego.*
+import mapa.*
 
 describe "Entrega 1" {
 
@@ -216,7 +216,7 @@ describe "Entrega 2" {
 
   test "las celdas del banco no se repiten ni caen sobre paredes" {
     const celdasDeDinero = banco.celdasDeMonedas() + banco.celdasDeBolsas() + banco.celdasDeDiamantes()
-    const celdasDeParedes = gestorJuego.celdasDeParedes().map({ c => banco.celda(c.get(0), c.get(1)) })
+    const celdasDeParedes = mapa.celdasDeParedes().map({ c => banco.celda(c.get(0), c.get(1)) })
 
     assert.equals(celdasDeDinero.size(), celdasDeDinero.asSet().size())
     assert.that(celdasDeDinero.all({ celda => not celdasDeParedes.contains(celda) }))

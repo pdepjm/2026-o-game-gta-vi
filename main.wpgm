@@ -1,6 +1,7 @@
 import wollok.game.*
 import pantallas.inicio.*
 import gestorJuego.*
+import pantallas.gestorPantallas.*
 
 program juego {
     game.title("Untitled Game")
@@ -10,7 +11,7 @@ program juego {
     game.boardGround("fondo.png")
 
     gestorJuego.configurarJuegoBase()
-    gestorJuego.mostrarPantalla(pantallaInicio)
+    gestorPantallas.mostrar(pantallaInicio)
 
     game.start()
 }
