@@ -8,41 +8,41 @@ class Arma{
     const cooldownMs
     const danio
 
-method image()
+    method image()
 
-method balasEnCargador() = balasEnCargador
+    method balasEnCargador() = balasEnCargador
 
-method sePuedeAtravesarPolicia() = true
-method sePuedeAtravesarLadron() = true
+    method sePuedeAtravesarPolicia() = true
+    method sePuedeAtravesarLadron() = true
 
-method disparar(origen, direccion){
-    if(not self.puedeDisparar()){throw new DomainException(message = "No se puede disparar")}
-      cooldown = true
-      balasEnCargador -= 1
-      self.iniciarCooldown()
-      const celdaDeDisparo = direccion.siguientePosicion(origen) //dispara una posicion adelante del policia
-      const proyectil = new Proyectil(position = celdaDeDisparo, direccion = direccion, danioProyectil = danio)
-      game.addVisual(proyectil)
-      proyectil.iniciarMovimiento()
-    
-  }
+    method disparar(origen, direccion){
+        if(not self.puedeDisparar()){throw new DomainException(message = "No se puede disparar")}
+          cooldown = true
+          balasEnCargador -= 1
+          self.iniciarCooldown()
+          const celdaDeDisparo = direccion.siguientePosicion(origen) //dispara una posicion adelante del policia
+          const proyectil = new Proyectil(position = celdaDeDisparo, direccion = direccion, danioProyectil = danio)
+          game.addVisual(proyectil)
+          proyectil.iniciarMovimiento()
+        
+      }
 
-method puedeDisparar() = not cooldown and balasEnCargador > 0
+    method puedeDisparar() = not cooldown and balasEnCargador > 0
 
-method iniciarCooldown() {
-    game.schedule(cooldownMs, { cooldown = false })
-  }
+    method iniciarCooldown() {
+        game.schedule(cooldownMs, { cooldown = false })
+      }
 
-method recargar(){
-    balasEnCargador = municionMaxima
-  }
+    method recargar(){
+        balasEnCargador = municionMaxima
+      }
 
-//con un arma equipada la municion se recoge
-method recogerMunicion(municion, policia){
-    municion.serRecogidaPor(policia)
-  }
+    //con un arma equipada la municion se recoge
+    method recogerMunicion(municion, policia){
+        municion.serRecogidaPor(policia)
+      }
 
-method recibirImpactoDe(proyectil){}
+    method recibirImpactoDe(proyectil){}
 
 }
 

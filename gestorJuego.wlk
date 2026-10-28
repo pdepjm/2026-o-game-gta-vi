@@ -50,6 +50,9 @@ object gestorJuego {
     method agregarHud() {
         game.addVisual(puntaje)
         game.addVisual(vidas)
+        game.addVisual(objetoQueCarga)
+        game.addVisual(armaActualDelPolcia)
+        game.addVisual(municionDelArmaDelPolicia)
     }
 
     method agregarPersonajes() {
@@ -80,6 +83,9 @@ object gestorJuego {
         game.removeVisual(camionAtras)
         game.removeVisual(puntaje)
         game.removeVisual(vidas)
+        game.removeVisual(objetoQueCarga)
+        game.removeVisual(armaActualDelPolcia)
+        game.removeVisual(municionDelArmaDelPolicia)
         banco.vaciar()
         //ademas de sacar el item del escenario hay que dar de baja su handler de colision
         itemsDeLaPartida.forEach({ item =>

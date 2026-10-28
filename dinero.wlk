@@ -4,9 +4,12 @@ import banco.*
 //lo comun a todo el dinero esta aca: cada tipo solo define su valor, su imagen y como afecta al ladron al cargarlo
 class Dinero{
     const property position = game.origin()
-
-    method valor()
-    method image()
+    const valor
+    const imagen
+    const cambioDeVelocidad
+    
+    method valor() = valor
+    method image() = imagen
 
     method serRecogidoPor(ladron){ ladron.cargar(self) }
 
@@ -21,7 +24,9 @@ class Dinero{
 
     method serEntregadoA(camion){ camion.recibir(self) }
 
-    method alSerCargadoPor(ladron){}
+    method alSerCargadoPor(ladron){
+        ladron.modificarVelocidad(cambioDeVelocidad)
+    }
 
     method sePuedeAtravesarLadron() = true
     method sePuedeAtravesarPolicia() = true
@@ -29,28 +34,28 @@ class Dinero{
     method recibirImpactoDe(proyectil){}
 }
 
-class Moneda inherits Dinero{
-    override method valor() = 10
+// class Moneda inherits Dinero{
+//     override method valor() = 10
 
-    override method image() = "moneda.png"
-}
+//     override method image() = "moneda.png"
+// }
 
-class BolsaDeDinero inherits Dinero{
-    override method valor() = 100
+// class BolsaDeDinero inherits Dinero{
+//     override method valor() = 100
 
-    override method image() = "bolsa.png"
+//     override method image() = "bolsa.png"
 
-    override method alSerCargadoPor(ladron){
-        ladron.modificarVelocidad(-100)
-    }
-}
+//     override method alSerCargadoPor(ladron){
+//         ladron.modificarVelocidad(-100)
+//     }
+// }
 
-class Diamante inherits Dinero{
-    override method valor() = 500
+// class Diamante inherits Dinero{
+//     override method valor() = 500
 
-    override method image() = "diamante.png"
+//     override method image() = "diamante.png"
 
-    override method alSerCargadoPor(ladron){
-        ladron.modificarVelocidad(100)
-    }
-}
+//     override method alSerCargadoPor(ladron){
+//         ladron.modificarVelocidad(100)
+//     }
+// }

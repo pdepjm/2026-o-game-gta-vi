@@ -13,6 +13,8 @@ object ladron inherits Personaje(posicionInicial = game.at(1, 1)) {
 
     override method image() = direccion.imagenLadron()
 
+    method objetoQueCarga() = objetoQueCarga
+
     override method celdaLibre(destino) = game.getObjectsIn(destino).all({ objeto => objeto.sePuedeAtravesarLadron() })
 
     method pasoElTiempoDeMovimiento() = game.currentTime() - ultimoMovimiento >= velocidad

@@ -120,7 +120,7 @@ describe "Entrega 1" {
   }
 
   test "el ladrón puede cargar una moneda" {
-    moneda = new Moneda(position = game.at(1, 8))
+    moneda = new Dinero(position = game.at(1, 8), valor = 10, imagen = "moneda.png", cambioDeVelocidad = 0) // Moneda
     banco.agregar(moneda)
     ladron.position(game.at(1, 8))
 
@@ -133,7 +133,7 @@ describe "Entrega 1" {
   }
 
   test "el camión recibe la carga del ladrón" {
-    moneda = new Moneda(position = game.at(1, 8))
+    moneda = new Dinero(position = game.at(1, 8), valor = 10, imagen = "moneda.png", cambioDeVelocidad = 0) // Moneda
     banco.agregar(moneda)
     ladron.position(game.at(1, 8))
     moneda.serRecogidoPor(ladron)
@@ -146,7 +146,7 @@ describe "Entrega 1" {
   }
 
   test "el ladrón puede cargar una bolsa y entregarla" {
-    bolsa = new BolsaDeDinero(position = game.at(5, 9))
+    bolsa = new Dinero(position = game.at(5, 9), valor = 100, imagen = "bolsa.png", cambioDeVelocidad = -100) // Bolsa de Dinero
     banco.agregar(bolsa)
     ladron.position(game.at(5, 9))
 
@@ -233,7 +233,7 @@ describe "Entrega 2" {
   }
 
   test "retirar saca el dinero del banco y del mapa" {
-    const moneda = new Moneda(position = game.at(10, 15))
+    const moneda = new Dinero(position = game.at(10, 15), valor = 10, imagen = "moneda.png", cambioDeVelocidad = 0) // Moneda
     banco.agregar(moneda)
 
     banco.retirar(moneda)
@@ -243,7 +243,7 @@ describe "Entrega 2" {
   }
 
   test "una entrega no repone el dinero si todavia queda en el mapa" {
-    banco.agregar(new Moneda(position = game.at(10, 15)))
+    banco.agregar(new Dinero(position = game.at(10, 15), valor = 10, imagen = "moneda.png", cambioDeVelocidad = 0))
 
     banco.entregaRealizada()
 
@@ -252,7 +252,7 @@ describe "Entrega 2" {
   }
 
   test "la entrega del ultimo dinero repone el banco" {
-    const moneda = new Moneda(position = game.at(10, 15))
+    const moneda = new Dinero(position = game.at(10, 15), valor = 10, imagen = "moneda.png", cambioDeVelocidad = 0) // Moneda
     banco.agregar(moneda)
     moneda.serRecogidoPor(ladron)
 
@@ -264,15 +264,21 @@ describe "Entrega 2" {
 
   // ---- dinero y entrega
 
+  // test "cada tipo de dinero vale lo que corresponde" {
+  //   assert.equals(10, new Moneda().valor())
+  //   assert.equals(100, new BolsaDeDinero().valor())
+  //   assert.equals(500, new Diamante().valor())
+  // }
+
   test "cada tipo de dinero vale lo que corresponde" {
-    assert.equals(10, new Moneda().valor())
-    assert.equals(100, new BolsaDeDinero().valor())
-    assert.equals(500, new Diamante().valor())
+    assert.equals(10,  new Dinero(position = game.at(10, 15), valor = 10, imagen = "moneda.png", cambioDeVelocidad = 0).valor()) //Moneda
+    assert.equals(100, new Dinero(position = game.at(10, 15), valor = 100, imagen = "bolsa.png", cambioDeVelocidad = -100).valor()) // Bolsa de dinero
+    assert.equals(500, new Dinero(position = game.at(10, 15), valor = 500, imagen = "diamante.png", cambioDeVelocidad = 100).valor()) // Diamante
   }
 
   test "el ladron con las manos ocupadas no recoge mas dinero" {
-    const primera = new Moneda(position = game.at(10, 15))
-    const segunda = new Moneda(position = game.at(11, 15))
+    const primera = new Dinero(position = game.at(10, 15), valor = 10, imagen = "moneda.png", cambioDeVelocidad = 0) //Moneda 1
+    const segunda = new Dinero(position = game.at(11, 15), valor = 10, imagen = "moneda.png", cambioDeVelocidad = 0) //Moneda 2
     banco.agregar(primera)
     banco.agregar(segunda)
     primera.serRecogidoPor(ladron)
@@ -285,9 +291,9 @@ describe "Entrega 2" {
   }
 
   test "al entregar la carga el ladron queda con las manos vacias" {
-    const moneda = new Moneda(position = game.at(10, 15))
+    const moneda = new Dinero(position = game.at(10, 15), valor = 10, imagen = "moneda.png", cambioDeVelocidad = 0)
     banco.agregar(moneda)
-    banco.agregar(new Moneda(position = game.at(11, 15)))
+    banco.agregar(new Dinero(position = game.at(11, 15), valor = 10, imagen = "moneda.png", cambioDeVelocidad = 0))
     moneda.serRecogidoPor(ladron)
     ladron.entregarCargaA(camion)
 
@@ -298,8 +304,8 @@ describe "Entrega 2" {
   }
 
   test "despues de entregar el ladron puede cargar otro dinero" {
-    const primera = new Moneda(position = game.at(10, 15))
-    const segunda = new BolsaDeDinero(position = game.at(11, 15))
+    const primera = new Dinero(position = game.at(10, 15), valor = 10, imagen = "moneda.png", cambioDeVelocidad = 0) // Moneda
+    const segunda = new Dinero(position = game.at(11, 15), valor = 100, imagen = "bolsa.png", cambioDeVelocidad = -100)
     banco.agregar(primera)
     banco.agregar(segunda)
     primera.serRecogidoPor(ladron)
@@ -313,8 +319,8 @@ describe "Entrega 2" {
   }
 
   test "el ladron con las manos ocupadas conserva su carga" {
-    const moneda = new Moneda(position = game.at(10, 15))
-    const diamante = new Diamante(position = game.at(11, 15))
+    const moneda = new Dinero(position = game.at(10, 15), valor = 10, imagen = "moneda.png", cambioDeVelocidad = 0)
+    const diamante = new Dinero(position = game.at(11, 15), valor = 500, imagen = "diamante.png", cambioDeVelocidad = 100)
     banco.agregar(moneda)
     banco.agregar(diamante)
     moneda.serRecogidoPor(ladron)

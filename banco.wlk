@@ -27,9 +27,9 @@ object banco {
 
     //crea dinero NUEVO en las celdas del banco: se usa al empezar la partida y cada vez que el mapa se queda sin dinero
     method reponer() {
-        self.reponerEn(self.celdasDeMonedas(), { posicion => new Moneda(position = posicion) })
-        self.reponerEn(self.celdasDeBolsas(), { posicion => new BolsaDeDinero(position = posicion) })
-        self.reponerEn(self.celdasDeDiamantes(), { posicion => new Diamante(position = posicion) })
+        self.reponerEn(self.celdasDeMonedas(), { posicion => new Dinero(position = posicion, valor = 10, imagen = "moneda.png", cambioDeVelocidad = 0) }) // Monedas
+        self.reponerEn(self.celdasDeBolsas(), { posicion => new Dinero(position = posicion, valor = 100, imagen = "bolsa.png", cambioDeVelocidad = -100) }) // Bolsa de Dinero
+        self.reponerEn(self.celdasDeDiamantes(), { posicion => new Dinero(position = posicion, valor = 500, imagen = "diamante.png", cambioDeVelocidad = 100) }) // Diamante
     }
 
     method reponerEn(posiciones, nuevoDinero) {

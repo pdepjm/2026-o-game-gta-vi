@@ -2,7 +2,7 @@ A. Correcciones de la entrega anterior
 
 [X] Policía sin arma: sinArma como objeto nulo (entiende lo mismo que pistola y escopeta, no hace nada al disparar).
 
-[] Dinero: una sola clase Dinero con valor, image y modificadorVelocidad como atributos. banco.reponer() crea cada uno con su configuración.
+[X] Dinero: una sola clase Dinero con valor, image y modificadorVelocidad como atributos. banco.reponer() crea cada uno con su configuración.
 
 [X] sinCarga en el ladrón (mismo patrón).
 

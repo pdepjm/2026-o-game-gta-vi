@@ -4,7 +4,7 @@ import gestorJuego.*
 import pantallas.gestorPantallas.*
 
 program juego {
-    game.title("Untitled Game")
+    game.title("Robo del Siglo")
     game.height(20)
     game.width(20)
     game.cellSize(50)

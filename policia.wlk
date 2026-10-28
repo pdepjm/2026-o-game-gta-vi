@@ -5,6 +5,7 @@ object policia inherits Personaje(posicionInicial = game.at(18, 1)) {
     var armaActual = sinArma
 
     override method image() = direccion.imagenPolicia()
+    method armaActual() = armaActual
 
     override method celdaLibre(destino) = game.getObjectsIn(destino).all({ objeto => objeto.sePuedeAtravesarPolicia() })
 
@@ -39,5 +40,6 @@ object sinArma{
 
     method recargar(){}
 
+    method balasEnCargador() = 0
     method recogerMunicion(municion, policia){}
 }
