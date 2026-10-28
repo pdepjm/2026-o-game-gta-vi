@@ -50,10 +50,14 @@ class Pistola inherits Arma(municionMaxima = 7, cooldownMs = 1500, danio = 1){
  
   override method image() = "pistola.png"
 
+  override method toString() = "Pistola"
+
 }
 
 class Escopeta inherits Arma(municionMaxima = 2, cooldownMs = 2500, danio = 2){
 
     override method image() = "escopeta.png"
+
+    override method toString() = "Escopeta"
 
 }

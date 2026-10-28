@@ -6,10 +6,14 @@ class Dinero{
     const property position = game.origin()
     const valor
     const imagen
-    const cambioDeVelocidad
-    
+    const modificadorVelocidad
+    const nombre
+
     method valor() = valor
     method image() = imagen
+
+    //es el nombre que se muestra en el HUD
+    override method toString() = nombre
 
     method serRecogidoPor(ladron){ ladron.cargar(self) }
 
@@ -25,7 +29,7 @@ class Dinero{
     method serEntregadoA(camion){ camion.recibir(self) }
 
     method alSerCargadoPor(ladron){
-        ladron.modificarVelocidad(cambioDeVelocidad)
+        ladron.modificarVelocidad(modificadorVelocidad)
     }
 
     method sePuedeAtravesarLadron() = true
@@ -33,29 +37,3 @@ class Dinero{
 
     method recibirImpactoDe(proyectil){}
 }
-
-// class Moneda inherits Dinero{
-//     override method valor() = 10
-
-//     override method image() = "moneda.png"
-// }
-
-// class BolsaDeDinero inherits Dinero{
-//     override method valor() = 100
-
-//     override method image() = "bolsa.png"
-
-//     override method alSerCargadoPor(ladron){
-//         ladron.modificarVelocidad(-100)
-//     }
-// }
-
-// class Diamante inherits Dinero{
-//     override method valor() = 500
-
-//     override method image() = "diamante.png"
-
-//     override method alSerCargadoPor(ladron){
-//         ladron.modificarVelocidad(100)
-//     }
-// }

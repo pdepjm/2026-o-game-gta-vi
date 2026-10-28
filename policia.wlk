@@ -42,4 +42,6 @@ object sinArma{
 
     method balasEnCargador() = 0
     method recogerMunicion(municion, policia){}
+
+    override method toString() = "ninguna"
 }

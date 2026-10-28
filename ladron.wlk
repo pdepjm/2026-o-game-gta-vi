@@ -79,4 +79,6 @@ object sinCarga{
     method dejarCargar(dinero, ladron){ dinero.cargarseEn(ladron) }
 
     method serEntregadoA(camion){}
+
+    override method toString() = "sin carga"
 }

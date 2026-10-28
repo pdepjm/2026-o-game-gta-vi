@@ -16,11 +16,11 @@ A. Correcciones de la entrega anterior
 
 B. HUD
 
-[] arma del policía (ícono y nombre vía arma.image() y arma.nombre())
+[X] arma del policía (ícono y nombre vía arma.image() y arma.nombre())
 
-[] municiones
+[X] municiones
 
-[] franja oscura detrás del texto para mejorar el contraste.
+[X] franja oscura detrás del texto para mejorar el contraste.
 
 C. Rendimiento 
 
@@ -39,3 +39,7 @@ C. Rendimiento
 IDEAS
 
 [] poner musica de slots de fondo
+
+JUGABILIDAD
+
+[] Hacer que las municiones reaparezcan

@@ -46,15 +46,6 @@ object gestorJuego {
         agregar.apply(new Municion(position = game.at(14, 0)))
     }
 
-    //se agrega despues de las paredes, asi se dibuja encima de la pared de arriba
-    method agregarHud() {
-        game.addVisual(puntaje)
-        game.addVisual(vidas)
-        game.addVisual(objetoQueCarga)
-        game.addVisual(armaActualDelPolcia)
-        game.addVisual(municionDelArmaDelPolicia)
-    }
-
     method agregarPersonajes() {
         game.addVisual(camion)
         game.addVisual(camionAtras)
@@ -72,7 +63,7 @@ object gestorJuego {
         self.agregarArmas()
         self.agregarMuniciones()
         self.agregarPersonajes()
-        self.agregarHud()
+        hud.mostrar()
     }
 
     method gameover() {
@@ -81,11 +72,7 @@ object gestorJuego {
         game.removeVisual(policia)
         game.removeVisual(camion)
         game.removeVisual(camionAtras)
-        game.removeVisual(puntaje)
-        game.removeVisual(vidas)
-        game.removeVisual(objetoQueCarga)
-        game.removeVisual(armaActualDelPolcia)
-        game.removeVisual(municionDelArmaDelPolicia)
+        hud.ocultar()
         banco.vaciar()
         //ademas de sacar el item del escenario hay que dar de baja su handler de colision
         itemsDeLaPartida.forEach({ item =>

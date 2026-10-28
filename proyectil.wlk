@@ -11,7 +11,7 @@ class Proyectil{
 
   method position() = position
 
-  method image() = "proyectil.png"
+  method image() = direccion.imagenBala()
 
   //el proyectil se registra a si mismo para recibir colisiones y se mueve solo hasta que impacta con algo
   method iniciarMovimiento(){

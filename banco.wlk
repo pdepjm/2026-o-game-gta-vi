@@ -27,10 +27,16 @@ object banco {
 
     //crea dinero NUEVO en las celdas del banco: se usa al empezar la partida y cada vez que el mapa se queda sin dinero
     method reponer() {
-        self.reponerEn(self.celdasDeMonedas(), { posicion => new Dinero(position = posicion, valor = 10, imagen = "moneda.png", cambioDeVelocidad = 0) }) // Monedas
-        self.reponerEn(self.celdasDeBolsas(), { posicion => new Dinero(position = posicion, valor = 100, imagen = "bolsa.png", cambioDeVelocidad = -100) }) // Bolsa de Dinero
-        self.reponerEn(self.celdasDeDiamantes(), { posicion => new Dinero(position = posicion, valor = 500, imagen = "diamante.png", cambioDeVelocidad = 100) }) // Diamante
+        self.reponerEn(self.celdasDeMonedas(), { posicion => self.moneda(posicion) })
+        self.reponerEn(self.celdasDeBolsas(), { posicion => self.bolsa(posicion) })
+        self.reponerEn(self.celdasDeDiamantes(), { posicion => self.diamante(posicion) })
     }
+
+    method moneda(posicion) = new Dinero(position = posicion, valor = 10, imagen = "moneda.png", modificadorVelocidad = 0, nombre = "Moneda")
+
+    method bolsa(posicion) = new Dinero(position = posicion, valor = 100, imagen = "bolsa.png", modificadorVelocidad = -100, nombre = "Bolsa de dinero")
+
+    method diamante(posicion) = new Dinero(position = posicion, valor = 500, imagen = "diamante.png", modificadorVelocidad = 100, nombre = "Diamante")
 
     method reponerEn(posiciones, nuevoDinero) {
         posiciones.forEach({ posicion => self.agregar(nuevoDinero.apply(posicion)) })
