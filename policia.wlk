@@ -1,5 +1,6 @@
 import wollok.game.*
 import personaje.*
+import tablero.*
 
 object policia inherits Personaje(posicionInicial = game.at(18, 1)) {
     var armaActual = sinArma
@@ -20,8 +21,7 @@ object policia inherits Personaje(posicionInicial = game.at(18, 1)) {
 
     method tomarArma(arma){
         armaActual = arma
-        game.removeVisual(arma)
-        io.removeCollitionHandler(arma.identity())
+        tablero.quitar(arma)
     }
 
     method disparar(){armaActual.disparar(position, direccion)}

@@ -1,5 +1,6 @@
 import wollok.game.*
 import dinero.*
+import tablero.*
 
 object banco {
     const dineroEnMapa = []
@@ -45,15 +46,12 @@ object banco {
     //ademas de mostrarlo, el dinero se registra para detectar cuando lo toca un personaje
     method agregar(dinero) {
         dineroEnMapa.add(dinero)
-        game.addVisual(dinero)
-        game.onCollideDo(dinero, { personaje => personaje.chocarConDinero(dinero) })
+        tablero.agregar(dinero, { personaje => personaje.chocarConDinero(dinero) })
     }
 
-    //ademas de sacarlo del escenario hay que dar de baja su handler de colision
     method retirar(dinero) {
         dineroEnMapa.remove(dinero)
-        game.removeVisual(dinero)
-        io.removeCollitionHandler(dinero.identity())
+        tablero.quitar(dinero)
     }
 
     //saca todo el dinero que quede en el mapa (al terminar una partida)

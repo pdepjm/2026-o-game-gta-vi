@@ -10,7 +10,7 @@ A. Correcciones de la entrega anterior
 
 [X] Repartir gestorJuego: sacar de ahí el armado del mapa, el teclado, las colisiones y las pantallas.
 
-[] gameover(): borrar las balas activas (y frenar sus ticks) al reiniciar.
+[X] gameover(): borrar las balas activas (y frenar sus ticks) al reiniciar. (innecesario)
 
 [] objeto que maneja los elementos del mapa
 

@@ -1,4 +1,5 @@
 import wollok.game.*
+import tablero.*
 
 class Proyectil{
   var position
@@ -13,9 +14,9 @@ class Proyectil{
 
   method image() = direccion.imagenBala()
 
-  //el proyectil se registra a si mismo para recibir colisiones y se mueve solo hasta que impacta con algo
+  //el proyectil se agrega al tablero para recibir colisiones y se mueve solo hasta que impacta con algo
   method iniciarMovimiento(){
-    game.onCollideDo(self, { objetoChocado => self.impactar(objetoChocado) })
+    tablero.agregar(self, { objetoChocado => self.impactar(objetoChocado) })
     self.programarSiguienteMovimiento()
   }
 
@@ -42,8 +43,7 @@ class Proyectil{
   method destruir(){
     if (activo) {
       activo = false
-      game.removeVisual(self)
-      io.removeCollitionHandler(self.identity()) // para que no siga recibiendo colisiones aunque ya no este en el escenario
+      tablero.quitar(self)
     }
   }
 

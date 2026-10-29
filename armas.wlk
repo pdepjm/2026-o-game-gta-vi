@@ -22,7 +22,6 @@ class Arma{
           self.iniciarCooldown()
           const celdaDeDisparo = direccion.siguientePosicion(origen) //dispara una posicion adelante del policia
           const proyectil = new Proyectil(position = celdaDeDisparo, direccion = direccion, danioProyectil = danio)
-          game.addVisual(proyectil)
           proyectil.iniciarMovimiento()
         
       }

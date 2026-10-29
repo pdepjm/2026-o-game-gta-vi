@@ -1,4 +1,5 @@
 import wollok.game.*
+import tablero.*
 
 class Municion {
   const property position = game.origin()
@@ -10,8 +11,7 @@ class Municion {
   //solo se recoge si quien la toca tiene un arma que recargar
   method serRecogidaPor(policia){
     policia.recargar()
-    game.removeVisual(self)
-    io.removeCollitionHandler(self.identity())
+    tablero.quitar(self)
   }
 
 }

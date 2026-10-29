@@ -1,8 +1,16 @@
 import wollok.game.*
 import escenario.*
+import ladron.*
+import policia.*
+import armas.*
+import municion.*
+import tablero.*
 
-//arma el escenario fijo del banco y la calle: paredes, mostradores, escritorios y decorado
+//maneja los elementos del mapa: el escenario fijo del banco y la calle (paredes, mostradores, escritorios y decorado)
+//y lo que aparece y desaparece en cada partida (camion, personajes, armas y municiones). El dinero lo maneja el banco
 object mapa {
+    
+    var itemsDeLaPartida = []
 
     //se llama UNA sola vez, al arrancar el programa
     method armar() {
@@ -74,5 +82,55 @@ object mapa {
         game.addVisual(autoPolicia)
         game.addVisual(escritorioGerenteIzquierdo)
         game.addVisual(escritorioGerenteDerecho)
+    }
+
+    //se llama al empezar cada partida
+    method mostrar() {
+        self.agregarArmas()
+        self.agregarMuniciones()
+        self.agregarPersonajes()
+    }
+
+    //se llama al terminar cada partida
+    method ocultar() {
+        self.sacarPersonajes()
+        self.sacarItems()
+    }
+
+    method agregarArmas() {
+        const agregar = { arma =>
+            tablero.agregar(arma, { personaje => personaje.chocarConArma(arma) })
+            itemsDeLaPartida.add(arma)
+        }
+        agregar.apply(new Pistola(position = game.at(17, 0)))
+        agregar.apply(new Escopeta(position = game.at(16, 0)))
+    }
+
+    method agregarMuniciones() {
+        const agregar = { municion =>
+            tablero.agregar(municion, { personaje => personaje.chocarConMunicion(municion) })
+            itemsDeLaPartida.add(municion)
+        }
+        agregar.apply(new Municion(position = game.at(15, 0)))
+        agregar.apply(new Municion(position = game.at(14, 0)))
+    }
+
+    method agregarPersonajes() {
+        game.addVisual(camion)
+        game.addVisual(camionAtras)
+        game.addVisual(policia)
+        game.addVisual(ladron)
+    }
+
+    method sacarPersonajes() {
+        game.removeVisual(ladron)
+        game.removeVisual(policia)
+        game.removeVisual(camion)
+        game.removeVisual(camionAtras)
+    }
+
+    method sacarItems() {
+        itemsDeLaPartida.forEach({ item => tablero.quitar(item) })
+        itemsDeLaPartida = []
     }
 }
