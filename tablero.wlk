@@ -1,17 +1,26 @@
 import wollok.game.*
 
-//agrega y saca del tablero a los elementos que reaccionan cuando algo choca con ellos (dinero, armas, municiones, balas)
+//agrega y saca del tablero a los elementos que reaccionan cuando algo llega a su celda (dinero, armas, municiones, camion, balas)
+//las colisiones se revisan solo cuando algo se mueve (alLlegar), no en cada cuadro del juego
 object tablero {
+    const reacciones = new Dictionary()
 
-    //lo muestra y registra como reacciona cuando algo choca con el: la reaccion recibe lo que choco
+    //lo muestra y guarda como reacciona cuando algo llega a su celda: la reaccion recibe lo que llego
     method agregar(elemento, reaccion) {
         game.addVisual(elemento)
-        game.onCollideDo(elemento, reaccion)
+        reacciones.put(elemento, reaccion)
     }
 
-    //lo saca y da de baja su handler de colision, para que no siga recibiendo colisiones aunque ya no este en el escenario
+    //lo saca y se olvida de su reaccion, para que no siga reaccionando aunque ya no este en el escenario
     method quitar(elemento) {
         game.removeVisual(elemento)
-        io.removeCollitionHandler(elemento.identity())
+        reacciones.remove(elemento)
+    }
+
+    //se llama cuando algo termina de moverse a una celda: cada elemento que esta ahi reacciona
+    method alLlegar(quienLlego) {
+        game.getObjectsIn(quienLlego.position()).forEach({ elemento =>
+            if (reacciones.containsKey(elemento)) { reacciones.get(elemento).apply(quienLlego) }
+        })
     }
 }

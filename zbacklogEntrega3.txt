@@ -12,7 +12,7 @@ A. Correcciones de la entrega anterior
 
 [X] gameover(): borrar las balas activas (y frenar sus ticks) al reiniciar. (innecesario)
 
-[] objeto que maneja los elementos del mapa
+[X] objeto que maneja los elementos del mapa
 
 B. HUD
 
@@ -24,9 +24,9 @@ B. HUD
 
 C. Rendimiento 
 
-[] Colisiones al moverse, no por cuadro.
+[X] Colisiones al moverse, no por cuadro.
 
-[] El proyectil revisa su celda al avanzar.
+[X] El proyectil revisa su celda al avanzar.
 
 [] Paredes y decorado como objetos lógicos en un mapa por celda, dibujados en fondo.png.
 

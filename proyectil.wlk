@@ -14,9 +14,10 @@ class Proyectil{
 
   method image() = direccion.imagenBala()
 
-  //el proyectil se agrega al tablero para recibir colisiones y se mueve solo hasta que impacta con algo
+  //el proyectil se agrega al tablero (asi lo que se mueva hasta su celda lo choca) y se mueve solo hasta que impacta con algo
   method iniciarMovimiento(){
     tablero.agregar(self, { objetoChocado => self.impactar(objetoChocado) })
+    self.chocarEnSuCelda()
     self.programarSiguienteMovimiento()
   }
 
@@ -28,8 +29,14 @@ class Proyectil{
   method avanzar(){
     if (activo) {
       position = self.siguientePosicion()
+      self.chocarEnSuCelda()
       self.programarSiguienteMovimiento()
     }
+  }
+
+  //choca con todo lo que hay en su celda: se revisa solo al aparecer y al avanzar, no en cada cuadro
+  method chocarEnSuCelda(){
+    game.getObjectsIn(position).forEach({ objeto => self.impactar(objeto) })
   }
 
   method siguientePosicion() = direccion.siguientePosicion(position)
@@ -39,7 +46,6 @@ class Proyectil{
     if (activo) { objetoChocado.recibirImpactoDe(self) }
   }
 
-  //ademas de sacarlo del tablero, hay que dar de baja el handler de colision
   method destruir(){
     if (activo) {
       activo = false
@@ -49,11 +55,6 @@ class Proyectil{
 
   //dos balas pueden coincidir en la misma celda (mas aun si el juego viene lento): se cruzan sin afectarse
   method recibirImpactoDe(proyectil){}
-
-  method chocarConDinero(dinero){}
-  method chocarConCamion(camion){}
-  method chocarConMunicion(municion){}
-  method chocarConArma(arma){}
 
   //un proyectil no bloquea el paso de nadie
   method sePuedeAtravesarLadron() = true

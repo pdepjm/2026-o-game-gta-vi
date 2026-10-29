@@ -116,8 +116,8 @@ object mapa {
     }
 
     method agregarPersonajes() {
-        game.addVisual(camion)
-        game.addVisual(camionAtras)
+        tablero.agregar(camion, { personaje => personaje.chocarConCamion(camion) })
+        tablero.agregar(camionAtras, { personaje => personaje.chocarConCamion(camion) })
         game.addVisual(policia)
         game.addVisual(ladron)
     }
@@ -125,8 +125,8 @@ object mapa {
     method sacarPersonajes() {
         game.removeVisual(ladron)
         game.removeVisual(policia)
-        game.removeVisual(camion)
-        game.removeVisual(camionAtras)
+        tablero.quitar(camion)
+        tablero.quitar(camionAtras)
     }
 
     method sacarItems() {

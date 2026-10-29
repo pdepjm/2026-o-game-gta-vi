@@ -1,5 +1,6 @@
 import wollok.game.*
 import direcciones.*
+import tablero.*
 
 class Personaje {
     const property posicionInicial
@@ -21,6 +22,7 @@ class Personaje {
         if (self.celdaLibre(destino)) {
             posicionAnterior = position
             position = destino
+            tablero.alLlegar(self)
         }
     }
 

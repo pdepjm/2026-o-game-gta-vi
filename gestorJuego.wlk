@@ -8,7 +8,6 @@ import hud.*
 import banco.*
 import mapa.*
 import controles.*
-import colisiones.*
 
 //maneja el flujo de la partida
 object gestorJuego {
@@ -16,7 +15,6 @@ object gestorJuego {
     method configurarJuegoBase() {
         mapa.armar()
         controles.configurar()
-        colisiones.configurar()
         //el ladron no conoce la partida: el gestor le dice que hacer cuando se queda sin vidas
         ladron.alMorir({ self.gameover() })
     }
