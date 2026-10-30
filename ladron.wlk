@@ -1,5 +1,6 @@
 import wollok.game.*
 import personaje.*
+import efectos.*
 
 object ladron inherits Personaje(posicionInicial = game.at(1, 1)) {
     const velocidadBase = 265
@@ -53,6 +54,7 @@ object ladron inherits Personaje(posicionInicial = game.at(1, 1)) {
     method alMorir(accion) { accionAlMorir = accion }
 
     method recibirImpactoDe(proyectil) {
+        sonidoImpactoBala.sonar()
         self.recibirDisparo(proyectil.danioProyectil())
         proyectil.destruir()
     }
@@ -60,6 +62,7 @@ object ladron inherits Personaje(posicionInicial = game.at(1, 1)) {
     method recibirDisparo(danio) {
         vidasRestantes = (vidasRestantes - danio).max(0)
         if (vidasRestantes == 0) {
+            sonidoMuerteLadron.sonar()
             accionAlMorir.apply()
         }
     }

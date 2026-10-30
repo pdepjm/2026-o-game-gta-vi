@@ -1,6 +1,7 @@
 import wollok.game.*
 import dinero.*
 import tablero.*
+import efectos.*
 
 object banco {
     const dineroEnMapa = []
@@ -33,11 +34,11 @@ object banco {
         self.reponerEn(self.celdasDeDiamantes(), { posicion => self.diamante(posicion) })
     }
 
-    method moneda(posicion) = new Dinero(position = posicion, valor = 10, imagen = "moneda.png", modificadorVelocidad = 0, nombre = "Moneda")
+    method moneda(posicion) = new Dinero(position = posicion, valor = 10, imagen = "moneda.png", modificadorVelocidad = 0, nombre = "Moneda", sonido = sonidoMoneda)
 
-    method bolsa(posicion) = new Dinero(position = posicion, valor = 100, imagen = "bolsa.png", modificadorVelocidad = -100, nombre = "Bolsa de dinero")
+    method bolsa(posicion) = new Dinero(position = posicion, valor = 100, imagen = "bolsa.png", modificadorVelocidad = -100, nombre = "Bolsa de dinero", sonido = sonidoBolsa)
 
-    method diamante(posicion) = new Dinero(position = posicion, valor = 500, imagen = "diamante.png", modificadorVelocidad = 100, nombre = "Diamante")
+    method diamante(posicion) = new Dinero(position = posicion, valor = 500, imagen = "diamante.png", modificadorVelocidad = 100, nombre = "Diamante", sonido = sonidoDiamante)
 
     method reponerEn(posiciones, nuevoDinero) {
         posiciones.forEach({ posicion => self.agregar(nuevoDinero.apply(posicion)) })

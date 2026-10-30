@@ -1,4 +1,5 @@
 import proyectil.*
+import efectos.*
 
 class Arma{
     const municionMaxima
@@ -7,6 +8,7 @@ class Arma{
     var cooldown = false
     const cooldownMs
     const danio
+    const sonido
 
     method image()
 
@@ -15,18 +17,23 @@ class Arma{
     method sePuedeAtravesarPolicia() = true
     method sePuedeAtravesarLadron() = true
 
+    //sin balas se escucha el cargador vacio, con el arma en espera entre disparos no pasa nada
     method disparar(origen, direccion){
-        if(not self.puedeDisparar()){throw new DomainException(message = "No se puede disparar")}
-          cooldown = true
-          balasEnCargador -= 1
-          self.iniciarCooldown()
-          const celdaDeDisparo = direccion.siguientePosicion(origen) //dispara una posicion adelante del policia
-          const proyectil = new Proyectil(position = celdaDeDisparo, direccion = direccion, danioProyectil = danio)
-          proyectil.iniciarMovimiento()
-        
-      }
+        if (self.sinBalas()) { sonidoCargadorVacio.sonar() }
+        else if (not cooldown) { self.lanzarProyectil(origen, direccion) }
+    }
 
-    method puedeDisparar() = not cooldown and balasEnCargador > 0
+    method lanzarProyectil(origen, direccion){
+        cooldown = true
+        balasEnCargador -= 1
+        self.iniciarCooldown()
+        sonido.sonar()
+        const celdaDeDisparo = direccion.siguientePosicion(origen) //dispara una posicion adelante del policia
+        const proyectil = new Proyectil(position = celdaDeDisparo, direccion = direccion, danioProyectil = danio)
+        proyectil.iniciarMovimiento()
+    }
+
+    method sinBalas() = balasEnCargador == 0
 
     method iniciarCooldown() {
         game.schedule(cooldownMs, { cooldown = false })
@@ -34,6 +41,7 @@ class Arma{
 
     method recargar(){
         balasEnCargador = municionMaxima
+        sonidoRecargar.sonar()
       }
 
     //con un arma equipada la municion se recoge
@@ -45,7 +53,7 @@ class Arma{
 
 }
 
-class Pistola inherits Arma(municionMaxima = 7, cooldownMs = 1500, danio = 1){
+class Pistola inherits Arma(municionMaxima = 7, cooldownMs = 1500, danio = 1, sonido = sonidoPistola){
  
   override method image() = "pistola.png"
 
@@ -53,7 +61,7 @@ class Pistola inherits Arma(municionMaxima = 7, cooldownMs = 1500, danio = 1){
 
 }
 
-class Escopeta inherits Arma(municionMaxima = 2, cooldownMs = 2500, danio = 2){
+class Escopeta inherits Arma(municionMaxima = 2, cooldownMs = 2500, danio = 2, sonido = sonidoEscopeta){
 
     override method image() = "escopeta.png"
 

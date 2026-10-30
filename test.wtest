@@ -409,12 +409,15 @@ describe "Entrega 2" {
     proyectilDeEscopeta.destruir()
   }
 
-  test "no se puede disparar mientras el arma esta en cooldown" {
-    policia.tomarArma(new Pistola())
+  test "no dispara mientras el arma esta en cooldown" {
+    const arma = new Pistola()
+    policia.tomarArma(arma)
     policia.disparar()
     const proyectil = game.allVisuals().last()
 
-    assert.throwsExceptionWithMessage("No se puede disparar", { policia.disparar() })
+    policia.disparar()
+
+    assert.equals(6, arma.balasEnCargador())
     proyectil.destruir()
   }
 

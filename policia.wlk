@@ -1,6 +1,7 @@
 import wollok.game.*
 import personaje.*
 import tablero.*
+import efectos.*
 
 object policia inherits Personaje(posicionInicial = game.at(18, 1)) {
     var armaActual = sinArma
@@ -22,6 +23,7 @@ object policia inherits Personaje(posicionInicial = game.at(18, 1)) {
     method tomarArma(arma){
         armaActual = arma
         tablero.quitar(arma)
+        sonidoEquiparArma.sonar()
     }
 
     method disparar(){armaActual.disparar(position, direccion)}

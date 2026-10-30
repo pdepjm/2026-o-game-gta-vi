@@ -1,5 +1,6 @@
 import wollok.game.*
 import banco.*
+import efectos.*
 
 //lo comun a todo el dinero esta aca: cada tipo solo define su valor, su imagen y como afecta al ladron al cargarlo
 class Dinero{
@@ -8,6 +9,7 @@ class Dinero{
     const imagen
     const modificadorVelocidad
     const nombre
+    const sonido
 
     method valor() = valor
     method image() = imagen
@@ -24,6 +26,7 @@ class Dinero{
     method cargarseEn(ladron){
         banco.retirar(self)
         ladron.tomar(self)
+        sonido.sonar()
     }
 
     method serEntregadoA(camion){ camion.recibir(self) }

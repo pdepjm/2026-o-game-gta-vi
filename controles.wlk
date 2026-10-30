@@ -2,6 +2,7 @@ import wollok.game.*
 import ladron.*
 import policia.*
 import pantallas.gestorPantallas.*
+import musica.*
 
 //configura el teclado
 object controles {
@@ -26,5 +27,6 @@ object controles {
 
         keyboard.p().onPressDo({ if (activos) policia.disparar() })
         keyboard.enter().onPressDo({ gestorPantallas.accionarEnter() })
+        keyboard.m().onPressDo({ musica.alternarPausa() })
     }
 }

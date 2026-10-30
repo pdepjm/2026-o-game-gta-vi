@@ -1,6 +1,7 @@
 import wollok.game.*
 import banco.*
 import hud.*
+import efectos.*
 
 //el camion ocupa dos celdas por cuestiones decorativas
 //este objeto es la parte de adelante y tiene toda la logica de la entrega
@@ -11,6 +12,7 @@ object camion{
 
     method recibir(dinero){
         puntaje.sumar(dinero.valor())
+        sonidoEntrega.sonar()
         banco.entregaRealizada()
     }
 

@@ -34,11 +34,11 @@ C. Rendimiento
 
 [] actualizar diagramas de clases
 
-[] cambiar sprite de proyectil
+[X] cambiar sprite de proyectil
 
 IDEAS
 
-[] poner musica de slots de fondo
+[X] poner musica de slots de fondo
 
 JUGABILIDAD
 
