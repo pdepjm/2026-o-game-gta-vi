@@ -42,4 +42,4 @@ IDEAS
 
 JUGABILIDAD
 
-[] Hacer que las municiones reaparezcan
+[X] Hacer que las municiones reaparezcan
