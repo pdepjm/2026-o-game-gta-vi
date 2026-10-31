@@ -382,7 +382,7 @@ describe "Entrega 2" {
 
     assert.equals(3, ladron.vidasRestantes())
     assert.equals(game.at(1, 1), ladron.position())
-    assert.equals(game.at(18, 1), policia.position())
+    assert.equals(game.at(17, 1), policia.position())
   }
 
   test "la imagen de los personajes depende de hacia donde miran" {
@@ -433,7 +433,7 @@ describe "Entrega 2" {
   // ---- colisiones al moverse
 
   test "el policia toma el arma cuando se mueve a su celda" {
-    const arma = new Pistola(position = game.at(18, 0))
+    const arma = new Pistola(position = game.at(17, 0))
     tablero.agregar(arma, { personaje => personaje.chocarConArma(arma) })
 
     policia.moverseAbajo()
@@ -451,5 +451,17 @@ describe "Entrega 2" {
 
     assert.equals(2, ladron.vidasRestantes())
     game.removeVisual(ladron)
+  }
+
+  test "el arma que reaparece es otra igual en la misma celda y con el cargador lleno" {
+    const escopeta = new Escopeta(position = game.at(16, 0))
+    policia.tomarArma(escopeta)
+    policia.disparar()
+
+    const nueva = escopeta.nuevaEnLaMismaCelda()
+
+    assert.equals(game.at(16, 0), nueva.position())
+    assert.equals(2, nueva.balasEnCargador())
+    assert.notEquals(escopeta, nueva)
   }
 }

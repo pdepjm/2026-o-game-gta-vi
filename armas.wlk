@@ -1,5 +1,6 @@
 import proyectil.*
 import efectos.*
+import mapa.*
 
 class Arma{
     const municionMaxima
@@ -9,6 +10,7 @@ class Arma{
     const cooldownMs
     const danio
     const sonido
+    const tiempoReaparicionMs = 30000
 
     method image()
 
@@ -49,6 +51,14 @@ class Arma{
         municion.serRecogidaPor(policia)
       }
 
+    //cuando el policia la toma, vuelve a aparecer otra igual despues de un tiempo
+    method alSerTomada(){
+        game.schedule(tiempoReaparicionMs, { mapa.reaparecerArma(self) })
+    }
+
+    //el arma que reaparece otra igual en la misma celda
+    method nuevaEnLaMismaCelda()
+
     method recibirImpactoDe(proyectil){}
 
 }
@@ -59,6 +69,8 @@ class Pistola inherits Arma(municionMaxima = 7, cooldownMs = 1500, danio = 1, so
 
   override method toString() = "Pistola"
 
+  override method nuevaEnLaMismaCelda() = new Pistola(position = position)
+
 }
 
 class Escopeta inherits Arma(municionMaxima = 2, cooldownMs = 2500, danio = 2, sonido = sonidoEscopeta){
@@ -66,5 +78,7 @@ class Escopeta inherits Arma(municionMaxima = 2, cooldownMs = 2500, danio = 2, s
     override method image() = "escopeta.png"
 
     override method toString() = "Escopeta"
+
+    override method nuevaEnLaMismaCelda() = new Escopeta(position = position)
 
 }

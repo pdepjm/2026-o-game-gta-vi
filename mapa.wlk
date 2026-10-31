@@ -98,21 +98,38 @@ object mapa {
     }
 
     method agregarArmas() {
-        const agregar = { arma =>
-            tablero.agregar(arma, { personaje => personaje.chocarConArma(arma) })
-            itemsDeLaPartida.add(arma)
-        }
-        agregar.apply(new Pistola(position = game.at(17, 0)))
-        agregar.apply(new Escopeta(position = game.at(16, 0)))
+        self.agregarArma(new Pistola(position = game.at(17, 0)))
+        self.agregarArma(new Escopeta(position = game.at(16, 0)))
+    }
+
+    method agregarArma(arma) {
+        tablero.agregar(arma, { personaje => personaje.chocarConArma(arma) })
+        itemsDeLaPartida.add(arma)
+    }
+
+    //despues de que el policia toma un arma, otra igual aparece en la misma celda despues de un tiempo
+    method reaparecerArma(arma) {
+        if (itemsDeLaPartida.contains(arma)) { self.agregarArma(arma.nuevaEnLaMismaCelda()) }
     }
 
     method agregarMuniciones() {
-        const agregar = { municion =>
-            tablero.agregar(municion, { personaje => personaje.chocarConMunicion(municion) })
-            itemsDeLaPartida.add(municion)
-        }
-        agregar.apply(new Municion(position = game.at(15, 0)))
-        agregar.apply(new Municion(position = game.at(14, 0)))
+
+        self.agregarMunicion(new Municion(position = game.at(18, 1)))
+        self.agregarMunicion(new Municion(position = game.at(18, 2)))
+    }
+
+    method agregarMunicion(municion) {
+        self.mostrarMunicion(municion)
+        itemsDeLaPartida.add(municion)
+    }
+
+    method mostrarMunicion(municion) {
+        tablero.agregar(municion, { personaje => personaje.chocarConMunicion(municion) })
+    }
+
+    //la municion que el policia recogio vuelve a aparecer en su celda
+    method reaparecerMunicion(municion) {
+        if (itemsDeLaPartida.contains(municion)) { self.mostrarMunicion(municion) }
     }
 
     method agregarPersonajes() {

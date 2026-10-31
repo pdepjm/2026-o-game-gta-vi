@@ -43,3 +43,7 @@ IDEAS
 JUGABILIDAD
 
 [X] Hacer que las municiones reaparezcan
+
+OTROS
+
+[] cambiar la imagen reglas para que diga que se mutea la musica con M y que no diga que hay que dispararle 3 veces al ladron

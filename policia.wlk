@@ -3,7 +3,7 @@ import personaje.*
 import tablero.*
 import efectos.*
 
-object policia inherits Personaje(posicionInicial = game.at(18, 1)) {
+object policia inherits Personaje(posicionInicial = game.at(17, 1)) {
     var armaActual = sinArma
 
     override method image() = direccion.imagenPolicia()
@@ -24,6 +24,7 @@ object policia inherits Personaje(posicionInicial = game.at(18, 1)) {
         armaActual = arma
         tablero.quitar(arma)
         sonidoEquiparArma.sonar()
+        arma.alSerTomada()
     }
 
     method disparar(){armaActual.disparar(position, direccion)}
