@@ -1,6 +1,7 @@
 import wollok.game.*
 import direcciones.*
 import tablero.*
+import mapa.*
 
 class Personaje {
     const property posicionInicial
@@ -28,7 +29,10 @@ class Personaje {
 
     method retroceder() { position = posicionAnterior }
 
-    method celdaLibre(destino) = true
+    //no se puede pisar una celda bloqueada ni una celda con algo que este personaje no pueda atravesar
+    method celdaLibre(destino) = not mapa.estaBloqueada(destino) and self.puedeAtravesarLoQueHayEn(destino)
+
+    method puedeAtravesarLoQueHayEn(destino)
 
     method reiniciar() {
         position = posicionInicial

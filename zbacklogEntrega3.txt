@@ -28,7 +28,7 @@ C. Rendimiento
 
 [X] El proyectil revisa su celda al avanzar.
 
-[] Paredes y decorado como objetos lógicos en un mapa por celda, dibujados en fondo.png.
+[X] Paredes y decorado como objetos lógicos en un mapa por celda, dibujados en fondo.png.
 
 [] tests
 

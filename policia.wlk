@@ -9,7 +9,7 @@ object policia inherits Personaje(posicionInicial = game.at(17, 1)) {
     override method image() = direccion.imagenPolicia()
     method armaActual() = armaActual
 
-    override method celdaLibre(destino) = game.getObjectsIn(destino).all({ objeto => objeto.sePuedeAtravesarPolicia() })
+    override method puedeAtravesarLoQueHayEn(destino) = game.getObjectsIn(destino).all({ objeto => objeto.sePuedeAtravesarPolicia() })
 
     method sePuedeAtravesarLadron() = false
 

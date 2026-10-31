@@ -15,7 +15,6 @@ import tablero.*
 
 describe "Entrega 1" {
 
-  var pared
   var moneda
   var bolsa
   var arma
@@ -97,27 +96,26 @@ describe "Entrega 1" {
   }
 
   test "la celda destino del ladrón se valida antes de moverse" {
-    pared = new Pared(position = game.at(2, 4))
-    game.addVisual(pared)
-    ladron.position(game.at(2, 3))
+    mapa.armar()
+    ladron.position(game.at(1, 5))
 
-    const destinoBloqueado = game.at(2, 4)
-    const destinoLibre = game.at(2, 2)
+    const destinoBloqueado = game.at(0, 5)
+    const destinoLibre = game.at(2, 5)
 
     assert.notThat(ladron.celdaLibre(destinoBloqueado))
     assert.that(ladron.celdaLibre(destinoLibre))
   }
 
   test "el policía puede moverse y no pisa una pared" {
-    pared = new Pared(position = game.at(8, 8))
-    game.addVisual(pared)
-    policia.position(game.at(8, 7))
+    mapa.armar()
+    policia.position(game.at(2, 5))
 
-    policia.moverseAbajo()
+    policia.moverseIzquierda()
+    policia.moverseIzquierda()
 
-    assert.equals(game.at(8, 6), policia.position())
-    assert.notThat(policia.celdaLibre(game.at(8, 8)))
-    assert.equals(abajo, policia.direccion())
+    assert.equals(game.at(1, 5), policia.position())
+    assert.notThat(policia.celdaLibre(game.at(0, 5)))
+    assert.equals(izquierda, policia.direccion())
   }
 
   test "el ladrón puede cargar una moneda" {
@@ -215,12 +213,12 @@ describe "Entrega 2" {
 
   // ---- banco
 
-  test "las celdas del banco no se repiten ni caen sobre paredes" {
+  test "las celdas del banco no se repiten ni caen sobre celdas bloqueadas" {
     const celdasDeDinero = banco.celdasDeMonedas() + banco.celdasDeBolsas() + banco.celdasDeDiamantes()
-    const celdasDeParedes = mapa.celdasDeParedes().map({ c => banco.celda(c.get(0), c.get(1)) })
+    const celdasBloqueadas = mapa.celdasBloqueadas()
 
     assert.equals(celdasDeDinero.size(), celdasDeDinero.asSet().size())
-    assert.that(celdasDeDinero.all({ celda => not celdasDeParedes.contains(celda) }))
+    assert.that(celdasDeDinero.all({ celda => not celdasBloqueadas.contains(celda) }))
   }
 
   test "reponer agrega dinero en todas las celdas del banco" {
@@ -421,11 +419,12 @@ describe "Entrega 2" {
     proyectil.destruir()
   }
 
-  test "la pared destruye el proyectil que la golpea" {
-    const proyectil = new Proyectil(position = game.at(4, 4), direccion = arriba, danioProyectil = 1)
+  test "el proyectil se destruye al llegar a una celda bloqueada" {
+    mapa.armar()
+    const proyectil = new Proyectil(position = game.at(1, 5), direccion = izquierda, danioProyectil = 1)
     game.addVisual(proyectil)
 
-    new Pared().recibirImpactoDe(proyectil)
+    proyectil.avanzar()
 
     assert.notThat(game.hasVisual(proyectil))
   }

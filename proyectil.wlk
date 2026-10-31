@@ -1,5 +1,6 @@
 import wollok.game.*
 import tablero.*
+import mapa.*
 
 class Proyectil{
   var position
@@ -34,9 +35,10 @@ class Proyectil{
     }
   }
 
-  //choca con todo lo que hay en su celda: se revisa solo al aparecer y al avanzar, no en cada cuadro
+  //si su celda esta bloqueada se destruye y si no choca con todo lo que hay ahi. se revisa solo al aparecer y al avanzar, no en cada cuadro
   method chocarEnSuCelda(){
-    game.getObjectsIn(position).forEach({ objeto => self.impactar(objeto) })
+    if (mapa.estaBloqueada(position)) { self.destruir() }
+    else { game.getObjectsIn(position).forEach({ objeto => self.impactar(objeto) }) }
   }
 
   method siguientePosicion() = direccion.siguientePosicion(position)
