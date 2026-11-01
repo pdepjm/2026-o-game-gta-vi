@@ -28,7 +28,7 @@ C. Rendimiento
 
 [X] El proyectil revisa su celda al avanzar.
 
-[] Paredes y decorado como objetos lógicos en un mapa por celda, dibujados en fondo.png.
+[X] Paredes y decorado como objetos lógicos en un mapa por celda, dibujados en fondo.png.
 
 [] tests
 
@@ -42,4 +42,8 @@ IDEAS
 
 JUGABILIDAD
 
-[] Hacer que las municiones reaparezcan
+[X] Hacer que las municiones reaparezcan
+
+OTROS
+
+[] cambiar la imagen reglas para que diga que se mutea la musica con M y que no diga que hay que dispararle 3 veces al ladron

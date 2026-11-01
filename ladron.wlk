@@ -16,7 +16,7 @@ object ladron inherits Personaje(posicionInicial = game.at(1, 1)) {
 
     method objetoQueCarga() = objetoQueCarga
 
-    override method celdaLibre(destino) = game.getObjectsIn(destino).all({ objeto => objeto.sePuedeAtravesarLadron() })
+    override method puedeAtravesarLoQueHayEn(destino) = game.getObjectsIn(destino).all({ objeto => objeto.sePuedeAtravesarLadron() })
 
     method pasoElTiempoDeMovimiento() = game.currentTime() - ultimoMovimiento >= velocidad
 
