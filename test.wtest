@@ -464,3 +464,279 @@ describe "Entrega 2" {
     assert.notEquals(escopeta, nueva)
   }
 }
+
+describe "Entrega 3" {
+
+  method initialize() {
+    mapa.armar()
+    banco.vaciar()
+    ladron.reiniciar()
+    policia.reiniciar()
+    puntaje.reiniciar()
+  }
+
+  // ---- celdas bloqueadas
+
+  test "el borde del mapa esta bloqueado" {
+    assert.that((0..19).all({ i =>
+      mapa.estaBloqueada(game.at(0, i)) and mapa.estaBloqueada(game.at(19, i)) and
+      mapa.estaBloqueada(game.at(i, 19)) and mapa.estaBloqueada(game.at(i, -1))
+    }))
+  }
+
+  test "las celdas por donde se camina no estan bloqueadas" {
+    const libres = [game.at(10, 10), game.at(1, 1), game.at(2, 5), game.at(4, 5), game.at(17, 3)]
+
+    assert.that(libres.all({ celda => not mapa.estaBloqueada(celda) }))
+  }
+
+  test "las paredes del interior y los muebles estan bloqueados" {
+    const pared = game.at(5, 8)
+    const mostrador = [game.at(3, 5), game.at(3, 6)]
+    const escritorio = [game.at(7, 10), game.at(7, 11)]
+    const escritorioDelGerente = [game.at(8, 5), game.at(9, 5)]
+    const autoDePolicia = game.at(18, 0)
+    const bloqueadas = [pared, autoDePolicia] + mostrador + escritorio + escritorioDelGerente
+
+    assert.that(bloqueadas.all({ celda => mapa.estaBloqueada(celda) }))
+  }
+
+  test "los personajes, el camion, las armas y las municiones empiezan en celdas libres" {
+    const celdas = [ladron.posicionInicial(), policia.posicionInicial(), camion.position(), camionAtras.position(),
+                    game.at(17, 0), game.at(16, 0), game.at(18, 1), game.at(18, 2)]
+
+    assert.that(celdas.all({ celda => not mapa.estaBloqueada(celda) }))
+  }
+
+  test "una celda no se bloquea dos veces" {
+    const celdas = mapa.celdasBloqueadas()
+
+    assert.equals(celdas.size(), celdas.asSet().size())
+  }
+
+  test "el ladron y el policia no entran a una celda bloqueada" {
+    const mostrador = game.at(3, 5)
+    policia.position(game.at(4, 5))
+
+    policia.moverseIzquierda()
+
+    assert.notThat(ladron.celdaLibre(mostrador))
+    assert.notThat(policia.celdaLibre(mostrador))
+    assert.equals(game.at(4, 5), policia.position())
+    assert.equals(izquierda, policia.direccion())
+  }
+
+  test "el proyectil avanza por una celda libre sin destruirse" {
+    const bala = new Proyectil(position = game.at(10, 10), direccion = arriba, danioProyectil = 1)
+    game.addVisual(bala)
+
+    bala.avanzar()
+
+    assert.equals(game.at(10, 11), bala.position())
+    assert.that(game.hasVisual(bala))
+    bala.destruir()
+  }
+
+  test "el disparo pegado a una pared se destruye al aparecer" {
+    policia.tomarArma(new Pistola())
+    policia.position(game.at(1, 5))
+    policia.direccion(izquierda)
+    const visualesAntes = game.allVisuals().size()
+
+    policia.disparar()
+
+    assert.equals(visualesAntes, game.allVisuals().size())
+  }
+
+  // ---- tablero
+
+  test "el tablero muestra lo que agrega y lo saca al quitarlo" {
+    const municion = new Municion(position = game.at(10, 10))
+
+    tablero.agregar(municion, { quien => })
+    assert.that(game.hasVisual(municion))
+
+    tablero.quitar(municion)
+    assert.notThat(game.hasVisual(municion))
+  }
+
+  test "al llegar a una celda reacciona lo que hay en ella y recibe a quien llego" {
+    var quienLlego = null
+    const municion = new Municion(position = game.at(10, 10))
+    tablero.agregar(municion, { quien => quienLlego = quien })
+    policia.position(game.at(10, 10))
+
+    tablero.alLlegar(policia)
+
+    assert.equals(policia, quienLlego)
+    tablero.quitar(municion)
+  }
+
+  test "no reacciona lo que esta en otra celda" {
+    var reacciono = false
+    const municion = new Municion(position = game.at(10, 10))
+    tablero.agregar(municion, { quien => reacciono = true })
+    policia.position(game.at(11, 10))
+
+    tablero.alLlegar(policia)
+
+    assert.notThat(reacciono)
+    tablero.quitar(municion)
+  }
+
+  test "lo que se quita del tablero deja de reaccionar aunque vuelva a mostrarse" {
+    var reacciono = false
+    const municion = new Municion(position = game.at(10, 10))
+    tablero.agregar(municion, { quien => reacciono = true })
+    tablero.quitar(municion)
+    game.addVisual(municion)
+    policia.position(game.at(10, 10))
+
+    tablero.alLlegar(policia)
+
+    assert.notThat(reacciono)
+    game.removeVisual(municion)
+  }
+
+  // ---- armas y municiones del mapa
+
+  test "al empezar la partida las armas y las municiones estan en su lugar" {
+    mapa.mostrar()
+
+    assert.equals(1, game.getObjectsIn(game.at(17, 0)).size())
+    assert.equals(1, game.getObjectsIn(game.at(16, 0)).size())
+    assert.equals(1, game.getObjectsIn(game.at(18, 1)).size())
+    assert.equals(1, game.getObjectsIn(game.at(18, 2)).size())
+    mapa.ocultar()
+  }
+
+  test "al terminar la partida se sacan los personajes, las armas y las municiones" {
+    mapa.mostrar()
+
+    mapa.ocultar()
+
+    assert.that(game.getObjectsIn(game.at(17, 0)).isEmpty())
+    assert.that(game.getObjectsIn(game.at(16, 0)).isEmpty())
+    assert.that(game.getObjectsIn(game.at(18, 1)).isEmpty())
+    assert.that(game.getObjectsIn(game.at(18, 2)).isEmpty())
+    assert.notThat(game.hasVisual(ladron))
+    assert.notThat(game.hasVisual(policia))
+  }
+
+  test "el arma que tomo el policia reaparece en su celda con el cargador lleno" {
+    mapa.mostrar()
+    const pistola = game.getObjectsIn(game.at(17, 0)).first()
+    policia.tomarArma(pistola)
+    assert.that(game.getObjectsIn(game.at(17, 0)).isEmpty())
+
+    mapa.reaparecerArma(pistola)
+
+    const nueva = game.getObjectsIn(game.at(17, 0)).first()
+    assert.notEquals(pistola, nueva)
+    assert.equals(7, nueva.balasEnCargador())
+    mapa.ocultar()
+  }
+
+  test "el arma no reaparece si la partida ya termino" {
+    mapa.mostrar()
+    const pistola = game.getObjectsIn(game.at(17, 0)).first()
+    policia.tomarArma(pistola)
+    mapa.ocultar()
+
+    mapa.reaparecerArma(pistola)
+
+    assert.that(game.getObjectsIn(game.at(17, 0)).isEmpty())
+  }
+
+  test "la municion que recogio el policia reaparece en su celda" {
+    mapa.mostrar()
+    const municion = game.getObjectsIn(game.at(18, 1)).first()
+    policia.tomarArma(new Pistola())
+    policia.chocarConMunicion(municion)
+    assert.notThat(game.hasVisual(municion))
+
+    mapa.reaparecerMunicion(municion)
+
+    assert.that(game.hasVisual(municion))
+    mapa.ocultar()
+  }
+
+  test "la municion no reaparece si la partida ya termino" {
+    mapa.mostrar()
+    const municion = game.getObjectsIn(game.at(18, 1)).first()
+    policia.tomarArma(new Pistola())
+    policia.chocarConMunicion(municion)
+    mapa.ocultar()
+
+    mapa.reaparecerMunicion(municion)
+
+    assert.notThat(game.hasVisual(municion))
+  }
+
+  test "el policia con arma recoge la municion al moverse a su celda y recarga" {
+    const arma = new Pistola(balasEnCargador = 3)
+    const municion = new Municion(position = game.at(18, 2))
+    tablero.agregar(municion, { personaje => personaje.chocarConMunicion(municion) })
+    policia.tomarArma(arma)
+    policia.position(game.at(18, 3))
+
+    policia.moverseAbajo()
+
+    assert.equals(7, arma.balasEnCargador())
+    assert.notThat(game.hasVisual(municion))
+  }
+
+  test "el ladron no recoge la municion" {
+    const municion = new Municion(position = game.at(18, 2))
+    tablero.agregar(municion, { personaje => personaje.chocarConMunicion(municion) })
+    ladron.position(game.at(18, 2))
+
+    tablero.alLlegar(ladron)
+
+    assert.that(game.hasVisual(municion))
+    tablero.quitar(municion)
+  }
+
+  test "el policia sin arma deja la municion en el mapa" {
+    const municion = new Municion(position = game.at(18, 2))
+    tablero.agregar(municion, { personaje => personaje.chocarConMunicion(municion) })
+    policia.position(game.at(18, 3))
+
+    policia.moverseAbajo()
+
+    assert.that(game.hasVisual(municion))
+    tablero.quitar(municion)
+  }
+
+  // ---- objetos nulos
+
+  test "el policia empieza sin arma y no dispara ni recarga" {
+    const visualesAntes = game.allVisuals().size()
+
+    policia.disparar()
+    policia.recargar()
+
+    assert.equals(sinArma, policia.armaActual())
+    assert.equals(0, policia.armaActual().balasEnCargador())
+    assert.equals(visualesAntes, game.allVisuals().size())
+  }
+
+  test "reiniciar le saca el arma al policia" {
+    policia.tomarArma(new Escopeta())
+
+    policia.reiniciar()
+
+    assert.equals(sinArma, policia.armaActual())
+  }
+
+  test "con el cargador vacio no se lanza ningun proyectil" {
+    const arma = new Pistola(balasEnCargador = 0)
+    policia.tomarArma(arma)
+    const visualesAntes = game.allVisuals().size()
+
+    policia.disparar()
+
+    assert.equals(0, arma.balasEnCargador())
+    assert.equals(visualesAntes, game.allVisuals().size())
+  }
+}

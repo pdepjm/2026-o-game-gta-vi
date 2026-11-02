@@ -32,7 +32,7 @@ C. Rendimiento
 
 [] tests
 
-[] actualizar diagramas de clases
+[X] actualizar diagramas de clases
 
 [X] cambiar sprite de proyectil
 
@@ -46,4 +46,4 @@ JUGABILIDAD
 
 OTROS
 
-[] cambiar la imagen reglas para que diga que se mutea la musica con M y que no diga que hay que dispararle 3 veces al ladron
+[X] cambiar la imagen reglas para que diga que se mutea la musica con M y que no diga que hay que dispararle 3 veces al ladron
