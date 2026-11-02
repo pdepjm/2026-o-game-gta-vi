@@ -1,8 +1,8 @@
 import wollok.game.*
-import tablero.*
-import mapa.*
+import celdasBloqueadas.*
+import elementoDelTablero.*
 
-class Proyectil{
+class Proyectil inherits ElementoDelTablero {
   var position
   const direccion
   const property danioProyectil
@@ -15,9 +15,9 @@ class Proyectil{
 
   method image() = direccion.imagenBala()
 
-  //el proyectil se agrega al tablero (asi lo que se mueva hasta su celda lo choca) y se mueve solo hasta que impacta con algo
+  //el proyectil se muestra en el tablero y se mueve solo hasta que impacta con algo
   method iniciarMovimiento(){
-    tablero.agregar(self, { objetoChocado => self.impactar(objetoChocado) })
+    game.addVisual(self)
     self.chocarEnSuCelda()
     self.programarSiguienteMovimiento()
   }
@@ -37,7 +37,7 @@ class Proyectil{
 
   //si su celda esta bloqueada se destruye y si no choca con todo lo que hay ahi. se revisa solo al aparecer y al avanzar, no en cada cuadro
   method chocarEnSuCelda(){
-    if (mapa.estaBloqueada(position)) { self.destruir() }
+    if (celdasBloqueadas.incluye(position)) { self.destruir() }
     else { game.getObjectsIn(position).forEach({ objeto => self.impactar(objeto) }) }
   }
 
@@ -51,14 +51,13 @@ class Proyectil{
   method destruir(){
     if (activo) {
       activo = false
-      tablero.quitar(self)
+      game.removeVisual(self)
     }
   }
 
-  //dos balas pueden coincidir en la misma celda (mas aun si el juego viene lento): se cruzan sin afectarse
-  method recibirImpactoDe(proyectil){}
+  //lo que se mueva hasta la celda del proyectil lo choca
+  override method reaccionarAlLlegar(quienLlego){ self.impactar(quienLlego) }
 
-  //un proyectil no bloquea el paso de nadie
-  method sePuedeAtravesarLadron() = true
-  method sePuedeAtravesarPolicia() = true
+  //dos balas pueden coincidir en la misma celda (mas aun si el juego viene lento): se cruzan sin afectarse
+  //como todo ElementoDelTablero, el proyectil no hace nada al recibir un impacto y no bloquea el paso de nadie
 }

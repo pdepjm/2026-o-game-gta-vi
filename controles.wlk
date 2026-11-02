@@ -1,8 +1,8 @@
 import wollok.game.*
 import ladron.*
 import policia.*
-import pantallas.gestorPantallas.*
 import musica.*
+import pantallas.gestorPantallas.*
 
 //configura el teclado
 object controles {
@@ -15,18 +15,23 @@ object controles {
     method desactivar() { activos = false }
 
     method configurar() {
-        keyboard.w().whilePressedDo({ if (activos) ladron.moverseArriba() }, intervaloLadron)
-        keyboard.s().whilePressedDo({ if (activos) ladron.moverseAbajo() }, intervaloLadron)
-        keyboard.a().whilePressedDo({ if (activos) ladron.moverseIzquierda() }, intervaloLadron)
-        keyboard.d().whilePressedDo({ if (activos) ladron.moverseDerecha() }, intervaloLadron)
+        keyboard.w().whilePressedDo(self.soloEnPartida({ ladron.moverseArriba() }), intervaloLadron)
+        keyboard.s().whilePressedDo(self.soloEnPartida({ ladron.moverseAbajo() }), intervaloLadron)
+        keyboard.a().whilePressedDo(self.soloEnPartida({ ladron.moverseIzquierda() }), intervaloLadron)
+        keyboard.d().whilePressedDo(self.soloEnPartida({ ladron.moverseDerecha() }), intervaloLadron)
 
-        keyboard.up().whilePressedDo({ if (activos) policia.moverseArriba() }, intervaloPolicia)
-        keyboard.down().whilePressedDo({ if (activos) policia.moverseAbajo() }, intervaloPolicia)
-        keyboard.left().whilePressedDo({ if (activos) policia.moverseIzquierda() }, intervaloPolicia)
-        keyboard.right().whilePressedDo({ if (activos) policia.moverseDerecha() }, intervaloPolicia)
+        keyboard.up().whilePressedDo(self.soloEnPartida({ policia.moverseArriba() }), intervaloPolicia)
+        keyboard.down().whilePressedDo(self.soloEnPartida({ policia.moverseAbajo() }), intervaloPolicia)
+        keyboard.left().whilePressedDo(self.soloEnPartida({ policia.moverseIzquierda() }), intervaloPolicia)
+        keyboard.right().whilePressedDo(self.soloEnPartida({ policia.moverseDerecha() }), intervaloPolicia)
 
-        keyboard.p().onPressDo({ if (activos) policia.disparar() })
+        keyboard.p().onPressDo(self.soloEnPartida({ policia.disparar() }))
         keyboard.enter().onPressDo({ gestorPantallas.accionarEnter() })
         keyboard.m().onPressDo({ musica.alternarPausa() })
+    }
+
+    //devuelve la misma accion pero que no hace nada si la partida no empezo
+    method soloEnPartida(accion) {
+        return { if (activos) accion.apply() }
     }
 }

@@ -1,6 +1,5 @@
 import wollok.game.*
 import personaje.*
-import tablero.*
 import efectos.*
 
 object policia inherits Personaje(posicionInicial = game.at(17, 1)) {
@@ -11,18 +10,17 @@ object policia inherits Personaje(posicionInicial = game.at(17, 1)) {
 
     override method puedeAtravesarLoQueHayEn(destino) = game.getObjectsIn(destino).all({ objeto => objeto.sePuedeAtravesarPolicia() })
 
-    method sePuedeAtravesarLadron() = false
+    override method sePuedeAtravesarLadron() = false
 
     method chocarConDinero(dinero){}
     method chocarConCamion(camion){}
     method chocarConMunicion(municion){ armaActual.recogerMunicion(municion, self) }
 
-    method recibirImpactoDe(proyectil){}
     method chocarConArma(arma){ self.tomarArma(arma) }
 
     method tomarArma(arma){
         armaActual = arma
-        tablero.quitar(arma)
+        game.removeVisual(arma)
         sonidoEquiparArma.sonar()
         arma.alSerTomada()
     }

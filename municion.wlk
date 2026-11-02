@@ -1,21 +1,21 @@
 import wollok.game.*
-import tablero.*
 import mapa.*
+import elementoDelTablero.*
 
-class Municion {
+class Municion inherits ElementoDelTablero {
     const property position = game.origin()
-    const tiempoReaparicionMs = 30000 // en milisegundos (30 segundos)
 
     method image() = "municion.png"
-    method sePuedeAtravesarPolicia() = true
-    method sePuedeAtravesarLadron() = true
 
-    // Solo se recoge si quien la toca tiene un arma que recargar
+    override method reaccionarAlLlegar(quienLlego){ quienLlego.chocarConMunicion(self) }
+
+    // Solo la recoge el policia, y recarga el arma que tenga equipada (si no tiene, la deja en el mapa)
     method serRecogidaPor(policia) {
         policia.recargar()
-        tablero.quitar(self)
-        game.schedule(tiempoReaparicionMs, { mapa.reaparecerMunicion(self) })
+        game.removeVisual(self)
+        mapa.itemTomado(self)
     }
 
-    method recibirImpactoDe(proyectil) {}
+    //la municion que se recogio vuelve a aparecer es la misma
+    method elQueReaparece() = self
 }

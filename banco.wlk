@@ -1,30 +1,27 @@
 import wollok.game.*
 import dinero.*
-import tablero.*
 import efectos.*
 
 object banco {
     const dineroEnMapa = []
 
-    //las celdas se cuentan de 1 a 20 (como en pantalla): se resta 1 para el juego
-    method celda(x, y) = game.at(x - 1, y - 1)
-
+    //las celdas se cuentan de 0 a 19
     method celdasDeMonedas() = [
-        self.celda(19, 17), self.celda(19, 18), self.celda(19, 19), self.celda(7, 8),
-        self.celda(8, 8), self.celda(9, 12), self.celda(9, 15), self.celda(5, 6),
-        self.celda(5, 9), self.celda(5, 12)
+        game.at(18, 16), game.at(18, 17), game.at(18, 18), game.at(6, 7),
+        game.at(7, 7), game.at(8, 11), game.at(8, 14), game.at(4, 5),
+        game.at(4, 8), game.at(4, 11)
     ]
 
     method celdasDeBolsas() = [
-        self.celda(5, 15), self.celda(7, 11), self.celda(7, 14), self.celda(19, 5),
-        self.celda(19, 6), self.celda(19, 12), self.celda(12, 6), self.celda(12, 7),
-        self.celda(12, 5), self.celda(12, 8), self.celda(19, 13), self.celda(19, 14),
-        self.celda(19, 15)
+        game.at(4, 14), game.at(6, 10), game.at(6, 13), game.at(18, 4),
+        game.at(18, 5), game.at(18, 11), game.at(11, 5), game.at(11, 6),
+        game.at(11, 4), game.at(11, 7), game.at(18, 12), game.at(18, 13),
+        game.at(18, 14)
     ]
 
     method celdasDeDiamantes() = [
-        self.celda(17, 8), self.celda(18, 8), self.celda(19, 8), self.celda(9, 5),
-        self.celda(17, 9), self.celda(18, 9), self.celda(19, 9)
+        game.at(16, 7), game.at(17, 7), game.at(18, 7), game.at(8, 4),
+        game.at(16, 8), game.at(17, 8), game.at(18, 8)
     ]
 
     //crea dinero NUEVO en las celdas del banco: se usa al empezar la partida y cada vez que el mapa se queda sin dinero
@@ -47,12 +44,12 @@ object banco {
     //ademas de mostrarlo, el dinero se registra para detectar cuando lo toca un personaje
     method agregar(dinero) {
         dineroEnMapa.add(dinero)
-        tablero.agregar(dinero, { personaje => personaje.chocarConDinero(dinero) })
+        game.addVisual(dinero)
     }
 
     method retirar(dinero) {
         dineroEnMapa.remove(dinero)
-        tablero.quitar(dinero)
+        game.removeVisual(dinero)
     }
 
     //saca todo el dinero que quede en el mapa (al terminar una partida)

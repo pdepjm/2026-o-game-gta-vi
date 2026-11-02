@@ -1,8 +1,10 @@
+import wollok.game.*
 import proyectil.*
 import efectos.*
 import mapa.*
+import elementoDelTablero.*
 
-class Arma{
+class Arma inherits ElementoDelTablero {
     const municionMaxima
     var balasEnCargador = municionMaxima
     const property position = game.origin()
@@ -10,14 +12,10 @@ class Arma{
     const cooldownMs
     const danio
     const sonido
-    const tiempoReaparicionMs = 30000
 
     method image()
 
     method balasEnCargador() = balasEnCargador
-
-    method sePuedeAtravesarPolicia() = true
-    method sePuedeAtravesarLadron() = true
 
     //sin balas se escucha el cargador vacio, con el arma en espera entre disparos no pasa nada
     method disparar(origen, direccion){
@@ -51,15 +49,15 @@ class Arma{
         municion.serRecogidaPor(policia)
       }
 
-    //cuando el policia la toma, vuelve a aparecer otra igual despues de un tiempo
+    override method reaccionarAlLlegar(quienLlego){ quienLlego.chocarConArma(self) }
+
+    //cuando el policia la toma, el mapa se encarga de que vuelva a aparecer
     method alSerTomada(){
-        game.schedule(tiempoReaparicionMs, { mapa.reaparecerArma(self) })
+        mapa.itemTomado(self)
     }
 
     //el arma que reaparece otra igual en la misma celda
-    method nuevaEnLaMismaCelda()
-
-    method recibirImpactoDe(proyectil){}
+    method elQueReaparece()
 
 }
 
@@ -69,7 +67,7 @@ class Pistola inherits Arma(municionMaxima = 7, cooldownMs = 1500, danio = 1, so
 
   override method toString() = "Pistola"
 
-  override method nuevaEnLaMismaCelda() = new Pistola(position = position)
+  override method elQueReaparece() = new Pistola(position = position)
 
 }
 
@@ -79,6 +77,6 @@ class Escopeta inherits Arma(municionMaxima = 2, cooldownMs = 2500, danio = 2, s
 
     override method toString() = "Escopeta"
 
-    override method nuevaEnLaMismaCelda() = new Escopeta(position = position)
+    override method elQueReaparece() = new Escopeta(position = position)
 
 }

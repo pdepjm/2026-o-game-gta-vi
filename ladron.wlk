@@ -3,6 +3,7 @@ import personaje.*
 import efectos.*
 
 object ladron inherits Personaje(posicionInicial = game.at(1, 1)) {
+    //milisegundos que tiene que esperar entre un paso y el siguiente: cuanto menor es, mas rapido camina
     const velocidadBase = 265
     var velocidad = velocidadBase
     var ultimoMovimiento = 0
@@ -20,14 +21,12 @@ object ladron inherits Personaje(posicionInicial = game.at(1, 1)) {
 
     method pasoElTiempoDeMovimiento() = game.currentTime() - ultimoMovimiento >= velocidad
 
-    override method moverA(destino) {
-        if (self.pasoElTiempoDeMovimiento() and self.celdaLibre(destino)) {
-            ultimoMovimiento = game.currentTime()
-            super(destino)
-        }
-    }
+    //no puede dar un paso hasta que pasan los milisegundos de su velocidad desde el ultimo
+    override method puedeMoverse() = self.pasoElTiempoDeMovimiento()
 
-    method sePuedeAtravesarPolicia() = false
+    override method alMoverse() { ultimoMovimiento = game.currentTime() }
+
+    override method sePuedeAtravesarPolicia() = false
 
     method chocarConDinero(dinero){ dinero.serRecogidoPor(self) }
     method chocarConCamion(camion){ camion.chocarConLadron(self) }
@@ -53,7 +52,7 @@ object ladron inherits Personaje(posicionInicial = game.at(1, 1)) {
 
     method alMorir(accion) { accionAlMorir = accion }
 
-    method recibirImpactoDe(proyectil) {
+    override method recibirImpactoDe(proyectil) {
         sonidoImpactoBala.sonar()
         self.recibirDisparo(proyectil.danioProyectil())
         proyectil.destruir()
@@ -67,6 +66,7 @@ object ladron inherits Personaje(posicionInicial = game.at(1, 1)) {
         }
     }
 
+    //el dinero que carga le suma o le resta milisegundos a su velocidad
     method modificarVelocidad(modificador){ velocidad += modificador }
 
     override method reiniciar() {

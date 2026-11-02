@@ -13,10 +13,9 @@ import controles.*
 object gestorJuego {
     //se llama UNA sola vez, al arrancar el programa
     method configurarJuegoBase() {
-        mapa.armar()
         controles.configurar()
         //el ladron no conoce la partida: el gestor le dice que hacer cuando se queda sin vidas
-        ladron.alMorir({ self.gameover() })
+        ladron.alMorir({ self.gameOver() })
     }
 
     //se llama al apretar ENTER desde pantallaReglas
@@ -29,7 +28,7 @@ object gestorJuego {
         hud.mostrar()
     }
 
-    method gameover() {
+    method gameOver() {
         controles.desactivar()
         mapa.ocultar()
         hud.ocultar()

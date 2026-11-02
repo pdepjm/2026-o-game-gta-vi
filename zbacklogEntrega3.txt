@@ -30,7 +30,7 @@ C. Rendimiento
 
 [X] Paredes y decorado como objetos lógicos en un mapa por celda, dibujados en fondo.png.
 
-[] tests
+[X] tests
 
 [X] actualizar diagramas de clases
 

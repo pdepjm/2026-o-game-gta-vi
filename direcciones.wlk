@@ -1,5 +1,3 @@
-import wollok.game.*
-
 object arriba {
   method siguientePosicion(posicion) = posicion.up(1)
   method imagenPolicia() = "policiaArriba.png"

@@ -1,3 +1,5 @@
+import wollok.game.*
+
 class Pantalla {
     method position() = game.origin()
 

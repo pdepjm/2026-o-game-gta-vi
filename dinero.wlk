@@ -1,12 +1,13 @@
 import wollok.game.*
 import banco.*
-import efectos.*
+import elementoDelTablero.*
 
 //lo comun a todo el dinero esta aca: cada tipo solo define su valor, su imagen y como afecta al ladron al cargarlo
-class Dinero{
+class Dinero inherits ElementoDelTablero {
     const property position = game.origin()
     const valor
     const imagen
+    //milisegundos que le suma a la velocidad del ladron (lo que espera entre paso y paso): si es negativo camina mas rapido y si es positivo mas lento
     const modificadorVelocidad
     const nombre
     const sonido
@@ -16,6 +17,8 @@ class Dinero{
 
     //es el nombre que se muestra en el HUD
     override method toString() = nombre
+
+    override method reaccionarAlLlegar(quienLlego){ quienLlego.chocarConDinero(self) }
 
     method serRecogidoPor(ladron){ ladron.cargar(self) }
 
@@ -34,9 +37,4 @@ class Dinero{
     method alSerCargadoPor(ladron){
         ladron.modificarVelocidad(modificadorVelocidad)
     }
-
-    method sePuedeAtravesarLadron() = true
-    method sePuedeAtravesarPolicia() = true
-
-    method recibirImpactoDe(proyectil){}
 }

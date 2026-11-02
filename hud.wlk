@@ -12,9 +12,11 @@ class FondoDeTexto {
 
 object puntaje {
     const property position = game.at(9, 19)
+    //espacios a la izquierda para correr el texto al centro de las dos celdas de la barra negra
+    const margenIzquierdo = "               "
     var puntos = 0
 
-    method text() = "               Puntos: " + puntos
+    method text() = margenIzquierdo + "Puntos: " + puntos
     method textColor() = "FF69B4FF" // Rosa
 
     method sumar(cantidad) {
