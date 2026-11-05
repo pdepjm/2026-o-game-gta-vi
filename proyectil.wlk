@@ -1,6 +1,8 @@
 import wollok.game.*
+import celdasBloqueadas.*
+import elementoDelTablero.*
 
-class Proyectil{
+class Proyectil inherits ElementoDelTablero {
   var position
   const direccion
   const property danioProyectil
@@ -11,11 +13,12 @@ class Proyectil{
 
   method position() = position
 
-  method image() = "proyectil.png"
+  method image() = direccion.imagenBala()
 
-  //el proyectil se registra a si mismo para recibir colisiones y se mueve solo hasta que impacta con algo
+  //el proyectil se muestra en el tablero y se mueve solo hasta que impacta con algo
   method iniciarMovimiento(){
-    game.onCollideDo(self, { objetoChocado => self.impactar(objetoChocado) })
+    game.addVisual(self)
+    self.chocarEnSuCelda()
     self.programarSiguienteMovimiento()
   }
 
@@ -27,8 +30,15 @@ class Proyectil{
   method avanzar(){
     if (activo) {
       position = self.siguientePosicion()
+      self.chocarEnSuCelda()
       self.programarSiguienteMovimiento()
     }
+  }
+
+  //si su celda esta bloqueada se destruye y si no choca con todo lo que hay ahi. se revisa solo al aparecer y al avanzar, no en cada cuadro
+  method chocarEnSuCelda(){
+    if (celdasBloqueadas.incluye(position)) { self.destruir() }
+    else { game.getObjectsIn(position).forEach({ objeto => self.impactar(objeto) }) }
   }
 
   method siguientePosicion() = direccion.siguientePosicion(position)
@@ -38,24 +48,16 @@ class Proyectil{
     if (activo) { objetoChocado.recibirImpactoDe(self) }
   }
 
-  //ademas de sacarlo del tablero, hay que dar de baja el handler de colision
   method destruir(){
     if (activo) {
       activo = false
       game.removeVisual(self)
-      io.removeCollitionHandler(self.identity()) // para que no siga recibiendo colisiones aunque ya no este en el escenario
     }
   }
 
+  //lo que se mueva hasta la celda del proyectil lo choca
+  override method reaccionarAlLlegar(quienLlego){ self.impactar(quienLlego) }
+
   //dos balas pueden coincidir en la misma celda (mas aun si el juego viene lento): se cruzan sin afectarse
-  method recibirImpactoDe(proyectil){}
-
-  method chocarConDinero(dinero){}
-  method chocarConCamion(camion){}
-  method chocarConMunicion(municion){}
-  method chocarConArma(arma){}
-
-  //un proyectil no bloquea el paso de nadie
-  method sePuedeAtravesarLadron() = true
-  method sePuedeAtravesarPolicia() = true
+  //como todo ElementoDelTablero, el proyectil no hace nada al recibir un impacto y no bloquea el paso de nadie
 }

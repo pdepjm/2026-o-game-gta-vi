@@ -1,51 +1,40 @@
 import wollok.game.*
 import banco.*
+import elementoDelTablero.*
 
 //lo comun a todo el dinero esta aca: cada tipo solo define su valor, su imagen y como afecta al ladron al cargarlo
-class Dinero{
+class Dinero inherits ElementoDelTablero {
     const property position = game.origin()
+    const valor
+    const imagen
+    //milisegundos que le suma a la velocidad del ladron (lo que espera entre paso y paso): si es negativo camina mas rapido y si es positivo mas lento
+    const modificadorVelocidad
+    const nombre
+    const sonido
 
-    method valor()
-    method image()
+    method valor() = valor
+    method image() = imagen
 
-    //si el ladron tiene las manos ocupadas el dinero se queda en el mapa
-    method serRecogidoPor(ladron){
-        if (ladron.tieneManosLibres()) {
-            banco.retirar(self)
-            ladron.cargar(self)
-        }
+    //es el nombre que se muestra en el HUD
+    override method toString() = nombre
+
+    override method reaccionarAlLlegar(quienLlego){ quienLlego.chocarConDinero(self) }
+
+    method serRecogidoPor(ladron){ ladron.cargar(self) }
+
+    //este dinero es la carga actual del ladron, no puede levantar otro
+    method dejarCargar(otroDinero, ladron){}
+
+    //el dinero sale del banco recien cuando el ladron realmente lo toma
+    method cargarseEn(ladron){
+        banco.retirar(self)
+        ladron.tomar(self)
+        sonido.sonar()
     }
 
-    method alSerCargadoPor(ladron){}
+    method serEntregadoA(camion){ camion.recibir(self) }
 
-    method sePuedeAtravesarLadron() = true
-    method sePuedeAtravesarPolicia() = true
-
-    method recibirImpactoDe(proyectil){}
-}
-
-class Moneda inherits Dinero{
-    override method valor() = 10
-
-    override method image() = "moneda.png"
-}
-
-class BolsaDeDinero inherits Dinero{
-    override method valor() = 100
-
-    override method image() = "bolsa.png"
-
-    override method alSerCargadoPor(ladron){
-        ladron.modificarVelocidad(-100)
-    }
-}
-
-class Diamante inherits Dinero{
-    override method valor() = 500
-
-    override method image() = "diamante.png"
-
-    override method alSerCargadoPor(ladron){
-        ladron.modificarVelocidad(100)
+    method alSerCargadoPor(ladron){
+        ladron.modificarVelocidad(modificadorVelocidad)
     }
 }

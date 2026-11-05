@@ -1,3 +1,5 @@
+import wollok.game.*
+
 class Pantalla {
     method position() = game.origin()
 
@@ -6,4 +8,10 @@ class Pantalla {
 
     method accionarEnter()
     method image()
+}
+
+object sinPantalla {
+    method ocultar() {}
+
+    method accionarEnter() {}
 }

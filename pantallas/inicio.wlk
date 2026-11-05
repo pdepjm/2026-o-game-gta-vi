@@ -1,11 +1,11 @@
 import pantallas.pantalla.*
 import pantallas.reglas.*
-import gestorJuego.*
+import pantallas.gestorPantallas.*
 
 object pantallaInicio inherits Pantalla {
     override method image() = "inicio.png"
 
     override method accionarEnter() {
-        gestorJuego.mostrarPantalla(pantallaReglas)
+        gestorPantallas.mostrar(pantallaReglas)
     }
 }

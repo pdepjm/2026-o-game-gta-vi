@@ -1,16 +1,19 @@
 import wollok.game.*
 import pantallas.inicio.*
 import gestorJuego.*
+import pantallas.gestorPantallas.*
+import musica.*
 
 program juego {
-    game.title("Untitled Game")
+    game.title("Robo del Siglo")
     game.height(20)
     game.width(20)
     game.cellSize(50)
     game.boardGround("fondo.png")
 
     gestorJuego.configurarJuegoBase()
-    gestorJuego.mostrarPantalla(pantallaInicio)
+    gestorPantallas.mostrar(pantallaInicio)
+    musica.iniciar()
 
     game.start()
 }
