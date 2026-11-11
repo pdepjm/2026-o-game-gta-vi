@@ -1,5 +1,6 @@
-### [Nombre del juego]
+### [Robo Del Siglo]
 
-* Integrante 1
-* Integrante 2
-* Etc...
+- Mazza Valentino
+- Bernabe Kevin
+- Ghioldi Crespo Francisco
+- Penna Valentin

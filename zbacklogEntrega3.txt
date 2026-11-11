@@ -1,0 +1,49 @@
+A. Correcciones de la entrega anterior
+
+[X] Policía sin arma: sinArma como objeto nulo (entiende lo mismo que pistola y escopeta, no hace nada al disparar).
+
+[X] Dinero: una sola clase Dinero con valor, image y modificadorVelocidad como atributos. banco.reponer() crea cada uno con su configuración.
+
+[X] sinCarga en el ladrón (mismo patrón).
+
+[X] sinPantalla en gestorJuego.
+
+[X] Repartir gestorJuego: sacar de ahí el armado del mapa, el teclado, las colisiones y las pantallas.
+
+[X] gameover(): borrar las balas activas (y frenar sus ticks) al reiniciar. (innecesario)
+
+[X] objeto que maneja los elementos del mapa
+
+B. HUD
+
+[X] arma del policía (ícono y nombre vía arma.image() y arma.nombre())
+
+[X] municiones
+
+[X] franja oscura detrás del texto para mejorar el contraste.
+
+C. Rendimiento 
+
+[X] Colisiones al moverse, no por cuadro.
+
+[X] El proyectil revisa su celda al avanzar.
+
+[X] Paredes y decorado como objetos lógicos en un mapa por celda, dibujados en fondo.png.
+
+[X] tests
+
+[X] actualizar diagramas de clases
+
+[X] cambiar sprite de proyectil
+
+IDEAS
+
+[X] poner musica de slots de fondo
+
+JUGABILIDAD
+
+[X] Hacer que las municiones reaparezcan
+
+OTROS
+
+[X] cambiar la imagen reglas para que diga que se mutea la musica con M y que no diga que hay que dispararle 3 veces al ladron
