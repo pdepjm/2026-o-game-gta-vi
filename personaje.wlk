@@ -9,11 +9,6 @@ class Personaje inherits ElementoDelTablero {
     var property direccion = abajo
     var posicionAnterior = position
 
-    method moverseArriba()    { self.moverHacia(arriba) }
-    method moverseAbajo()     { self.moverHacia(abajo) }
-    method moverseIzquierda() { self.moverHacia(izquierda) }
-    method moverseDerecha()   { self.moverHacia(derecha) }
-
     method moverHacia(nuevaDireccion) {
         direccion = nuevaDireccion
         self.moverA(direccion.siguientePosicion(position))

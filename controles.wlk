@@ -1,5 +1,6 @@
 import wollok.game.*
 import ladron.*
+import direcciones.*
 import policia.*
 import musica.*
 import pantallas.gestorPantallas.*
@@ -15,15 +16,15 @@ object controles {
     method desactivar() { activos = false }
 
     method configurar() {
-        keyboard.w().whilePressedDo(self.soloEnPartida({ ladron.moverseArriba() }), intervaloLadron)
-        keyboard.s().whilePressedDo(self.soloEnPartida({ ladron.moverseAbajo() }), intervaloLadron)
-        keyboard.a().whilePressedDo(self.soloEnPartida({ ladron.moverseIzquierda() }), intervaloLadron)
-        keyboard.d().whilePressedDo(self.soloEnPartida({ ladron.moverseDerecha() }), intervaloLadron)
+        keyboard.w().whilePressedDo(self.soloEnPartida({ ladron.moverHacia(arriba) }), intervaloLadron)
+        keyboard.s().whilePressedDo(self.soloEnPartida({ ladron.moverHacia(abajo) }), intervaloLadron)
+        keyboard.a().whilePressedDo(self.soloEnPartida({ ladron.moverHacia(izquierda) }), intervaloLadron)
+        keyboard.d().whilePressedDo(self.soloEnPartida({ ladron.moverHacia(derecha) }), intervaloLadron)
 
-        keyboard.up().whilePressedDo(self.soloEnPartida({ policia.moverseArriba() }), intervaloPolicia)
-        keyboard.down().whilePressedDo(self.soloEnPartida({ policia.moverseAbajo() }), intervaloPolicia)
-        keyboard.left().whilePressedDo(self.soloEnPartida({ policia.moverseIzquierda() }), intervaloPolicia)
-        keyboard.right().whilePressedDo(self.soloEnPartida({ policia.moverseDerecha() }), intervaloPolicia)
+        keyboard.up().whilePressedDo(self.soloEnPartida({ policia.moverHacia(arriba) }), intervaloPolicia)
+        keyboard.down().whilePressedDo(self.soloEnPartida({ policia.moverHacia(abajo) }), intervaloPolicia)
+        keyboard.left().whilePressedDo(self.soloEnPartida({ policia.moverHacia(izquierda) }), intervaloPolicia)
+        keyboard.right().whilePressedDo(self.soloEnPartida({ policia.moverHacia(derecha) }), intervaloPolicia)
 
         keyboard.p().onPressDo(self.soloEnPartida({ policia.disparar() }))
         keyboard.enter().onPressDo({ gestorPantallas.accionarEnter() })

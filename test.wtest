@@ -74,7 +74,7 @@ describe "Entrega 1" {
   test "el policia se mueve hacia arriba usando la direccion correspondiente" {
     policia.position(game.at(10, 10))
 
-    policia.moverseArriba()
+    policia.moverHacia(arriba)
 
     assert.equals(game.at(10, 11), policia.position())
     assert.equals(arriba, policia.direccion())
@@ -83,7 +83,7 @@ describe "Entrega 1" {
   test "el policia se mueve hacia abajo usando la direccion correspondiente" {
     policia.position(game.at(10, 10))
 
-    policia.moverseAbajo()
+    policia.moverHacia(abajo)
 
     assert.equals(game.at(10, 9), policia.position())
     assert.equals(abajo, policia.direccion())
@@ -92,7 +92,7 @@ describe "Entrega 1" {
   test "el policia se mueve hacia la izquierda usando la direccion correspondiente" {
     policia.position(game.at(10, 10))
 
-    policia.moverseIzquierda()
+    policia.moverHacia(izquierda)
 
     assert.equals(game.at(9, 10), policia.position())
     assert.equals(izquierda, policia.direccion())
@@ -101,7 +101,7 @@ describe "Entrega 1" {
   test "el policia se mueve hacia la derecha usando la direccion correspondiente" {
     policia.position(game.at(10, 10))
 
-    policia.moverseDerecha()
+    policia.moverHacia(derecha)
 
     assert.equals(game.at(11, 10), policia.position())
     assert.equals(derecha, policia.direccion())
@@ -120,8 +120,8 @@ describe "Entrega 1" {
   test "el policia puede moverse y no pisa una pared" {
     policia.position(game.at(2, 5))
 
-    policia.moverseIzquierda()
-    policia.moverseIzquierda()
+    policia.moverHacia(izquierda)
+    policia.moverHacia(izquierda)
 
     assert.equals(game.at(1, 5), policia.position())
     assert.notThat(policia.celdaLibre(game.at(0, 5)))
@@ -225,10 +225,9 @@ describe "Entrega 2" {
 
   test "las celdas del banco no se repiten ni caen sobre celdas bloqueadas" {
     const celdasDeDinero = banco.celdasDeMonedas() + banco.celdasDeBolsas() + banco.celdasDeDiamantes()
-    const bloqueadas = celdasBloqueadas.todas()
 
     assert.equals(celdasDeDinero.size(), celdasDeDinero.asSet().size())
-    assert.that(celdasDeDinero.all({ celda => not bloqueadas.contains(celda) }))
+    assert.that(celdasDeDinero.all({ celda => not celdasBloqueadas.incluye(celda) }))
   }
 
   test "reponer agrega dinero en todas las celdas del banco" {
@@ -444,7 +443,7 @@ describe "Entrega 2" {
     const arma = new Pistola(position = game.at(17, 0))
     game.addVisual(arma)
 
-    policia.moverseAbajo()
+    policia.moverHacia(abajo)
 
     assert.equals(arma, policia.armaActual())
     assert.notThat(game.hasVisual(arma))
@@ -516,17 +515,24 @@ describe "Entrega 3" {
     assert.that(celdas.all({ celda => not celdasBloqueadas.incluye(celda) }))
   }
 
-  test "una celda no se bloquea dos veces" {
-    const celdas = celdasBloqueadas.todas()
+  test "la matriz de celdas bloqueadas es de 20 por 20 y tiene solo ceros y unos" {
+    const matriz = celdasBloqueadas.matriz()
 
-    assert.equals(celdas.size(), celdas.asSet().size())
+    assert.equals(20, matriz.size())
+    assert.that(matriz.all({ fila => fila.size() == 20 and fila.all({ valor => valor == 0 or valor == 1 }) }))
+  }
+
+  test "lo que queda fuera del tablero esta bloqueado" {
+    const afuera = [game.at(-1, 5), game.at(20, 5), game.at(5, -1), game.at(5, 20)]
+
+    assert.that(afuera.all({ celda => celdasBloqueadas.incluye(celda) }))
   }
 
   test "el ladron y el policia no entran a una celda bloqueada" {
     const mostrador = game.at(3, 5)
     policia.position(game.at(4, 5))
 
-    policia.moverseIzquierda()
+    policia.moverHacia(izquierda)
 
     assert.notThat(ladron.celdaLibre(mostrador))
     assert.notThat(policia.celdaLibre(mostrador))
@@ -711,7 +717,7 @@ describe "Entrega 3" {
     policia.tomarArma(arma)
     policia.position(game.at(18, 3))
 
-    policia.moverseAbajo()
+    policia.moverHacia(abajo)
 
     assert.equals(7, arma.balasEnCargador())
     assert.notThat(game.hasVisual(municion))
@@ -733,7 +739,7 @@ describe "Entrega 3" {
     game.addVisual(municion)
     policia.position(game.at(18, 3))
 
-    policia.moverseAbajo()
+    policia.moverHacia(abajo)
 
     assert.that(game.hasVisual(municion))
     game.removeVisual(municion)
